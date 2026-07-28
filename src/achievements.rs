@@ -1,7 +1,9 @@
 //! Frogger achievement definitions.
 //!
-//! Registered once in `init()`. Home/score achievements unlock from
-//! `fill_home`, round achievements from `clear_round` (see `gameplay/flow`).
+//! Registered once in `init()` with names/descriptions from the locale
+//! tables, and re-registered on locale switches (id-keyed insert — unlock
+//! state survives). Home/score achievements unlock from `fill_home`, round
+//! achievements from `clear_round` (see `gameplay/flow`).
 
 use engine_core::prelude::*;
 
@@ -17,59 +19,97 @@ pub(crate) const SCORE_5K: &str = "score_5k";
 pub(crate) const INSICULOUS_CLEAR: &str = "insiculous_clear";
 pub(crate) const COOP_ROUND: &str = "coop_round";
 
-/// Grouped display order for the achievements page. First tuple element is
-/// the section header, second is the list of ids to render under it.
-pub(crate) const DISPLAY_SECTIONS: &[(&str, &[&str])] = &[
-    ("Crossings", &[FIRST_HOME, ROUND_CLEAR, HOMES_25]),
-    ("Skill", &[DEATHLESS_ROUND, SPEEDY, SCORE_5K]),
-    ("Chaos & Co-op", &[INSICULOUS_CLEAR, COOP_ROUND]),
+/// Every achievement id, in registration order.
+pub(crate) const ALL_IDS: [&str; 8] = [
+    FIRST_HOME, ROUND_CLEAR, HOMES_25,
+    DEATHLESS_ROUND, SPEEDY, SCORE_5K,
+    INSICULOUS_CLEAR, COOP_ROUND,
 ];
 
-/// Register every Frogger achievement. Call once from `Game::init`.
-pub(crate) fn register_all(mgr: &mut AchievementManager) {
-    mgr.register(Achievement::new(FIRST_HOME,
-        "Pond Pioneer",
-        "Guide a frog into its first home."));
-    mgr.register(Achievement::new(ROUND_CLEAR,
-        "Full House",
-        "Fill all five homes in one round."));
-    mgr.register(Achievement::new(HOMES_25,
-        "Homecoming Hero",
-        "Fill 25 homes in one session."));
+/// Grouped display order for the achievements page. First tuple element is
+/// the section-header locale key, second is the list of ids under it.
+pub(crate) const DISPLAY_SECTIONS: &[(&str, &[&str])] = &[
+    ("ach.section.crossings", &[FIRST_HOME, ROUND_CLEAR, HOMES_25]),
+    ("ach.section.skill", &[DEATHLESS_ROUND, SPEEDY, SCORE_5K]),
+    ("ach.section.chaos_coop", &[INSICULOUS_CLEAR, COOP_ROUND]),
+];
 
-    mgr.register(Achievement::new(DEATHLESS_ROUND,
-        "Untouched Crossing",
-        "Clear a round without losing a single life."));
-    mgr.register(Achievement::new(SPEEDY,
-        "Swift Swimmer",
-        "Reach home with 15 or more seconds to spare."));
-    mgr.register(Achievement::new(SCORE_5K,
-        "High Hopper",
-        "Score 5,000 points."));
-
-    mgr.register(Achievement::new(INSICULOUS_CLEAR,
-        "Insiculous Crossing",
-        "Clear a round in Insiculous mode."));
-    mgr.register(Achievement::new(COOP_ROUND,
-        "Tag Team",
-        "In co-op, both players fill a home in the same round."));
+/// Register every Frogger achievement with names/descriptions from the
+/// locale tables (`ach.<id>.name` / `ach.<id>.desc`). Called from
+/// `Game::init` AND again after a locale switch — `register` is an id-keyed
+/// insert, so re-registering refreshes the display strings without touching
+/// unlock state.
+pub(crate) fn register_all(mgr: &mut AchievementManager, strings: &Strings) {
+    for id in ALL_IDS {
+        let name_key = format!("ach.{id}.name");
+        let desc_key = format!("ach.{id}.desc");
+        mgr.register(Achievement::new(
+            id,
+            strings.tr(&name_key).to_string(),
+            strings.tr(&desc_key).to_string(),
+        ));
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    /// The game's real locale tables, loaded from assets/locales.
+    fn real_strings() -> Strings {
+        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("assets/locales");
+        Strings::load_dir(&dir)
+    }
+
     #[test]
     fn register_all_adds_eight() {
         let mut mgr = AchievementManager::in_memory();
-        register_all(&mut mgr);
+        register_all(&mut mgr, &Strings::empty());
         assert_eq!(mgr.total(), 8);
+    }
+
+    #[test]
+    fn register_all_uses_locale_names_and_rereg_keeps_unlocks() {
+        let mut strings = real_strings();
+        let mut mgr = AchievementManager::in_memory();
+        register_all(&mut mgr, &strings);
+        assert_eq!(mgr.get(FIRST_HOME).unwrap().name, "Pond Pioneer");
+
+        mgr.unlock(FIRST_HOME);
+        assert!(mgr.is_unlocked(FIRST_HOME));
+
+        // Switch locale, re-register: names refresh, unlock state survives.
+        strings.set_locale("pirate");
+        register_all(&mut mgr, &strings);
+        assert_eq!(mgr.get(FIRST_HOME).unwrap().name, "First Safe Harbor");
+        assert!(mgr.is_unlocked(FIRST_HOME), "re-registering must not reset unlocks");
+    }
+
+    #[test]
+    fn locale_files_have_matching_keys() {
+        let strings = real_strings();
+        let en = strings.locale_keys("en").expect("en.ron loads");
+        let pirate = strings.locale_keys("pirate").expect("pirate.ron loads");
+        assert!(!en.is_empty(), "en locale must define keys");
+        assert_eq!(en, pirate, "en.ron and pirate.ron must define the same key set");
+    }
+
+    #[test]
+    fn every_achievement_id_has_name_and_desc_keys() {
+        let strings = real_strings();
+        let en = strings.locale_keys("en").expect("en.ron loads");
+        for id in ALL_IDS {
+            let name_key = format!("ach.{id}.name");
+            let desc_key = format!("ach.{id}.desc");
+            assert!(en.contains(&name_key.as_str()), "{name_key} missing from en.ron");
+            assert!(en.contains(&desc_key.as_str()), "{desc_key} missing from en.ron");
+        }
     }
 
     #[test]
     fn display_sections_cover_every_registered_achievement() {
         let mut mgr = AchievementManager::in_memory();
-        register_all(&mut mgr);
+        register_all(&mut mgr, &Strings::empty());
 
         let shown: std::collections::HashSet<&str> = DISPLAY_SECTIONS
             .iter()
@@ -87,15 +127,11 @@ mod tests {
     }
 
     #[test]
-    fn every_id_is_registered() {
-        let mut mgr = AchievementManager::in_memory();
-        register_all(&mut mgr);
-        for id in [
-            FIRST_HOME, ROUND_CLEAR, HOMES_25,
-            DEATHLESS_ROUND, SPEEDY, SCORE_5K,
-            INSICULOUS_CLEAR, COOP_ROUND,
-        ] {
-            assert!(mgr.get(id).is_some(), "{} not registered", id);
+    fn section_headers_have_locale_keys() {
+        let strings = real_strings();
+        let en = strings.locale_keys("en").expect("en.ron loads");
+        for (section_key, _) in DISPLAY_SECTIONS {
+            assert!(en.contains(section_key), "{section_key} missing from en.ron");
         }
     }
 }

@@ -1,0 +1,82 @@
+// Pirate locale for Insiculous Frogger — same key set as en.ron (enforced
+// by the locale_files_have_matching_keys test). Also swaps the font.
+LocaleFile(
+    version: 1,
+    display_name: "Pirate",
+    // Relative to the asset base path (the game's assets/ directory).
+    font: Some("fonts/BlackSamsGold-ej5e.ttf"),
+    strings: {
+        // Title screen
+        "title.window": "INSICULOUS FROGGER",
+        "title.single": "Lone Deckhand",
+        "title.coop": "Two-Frog Crew",
+        "title.achievements": "Trophies o' the Crossing",
+        "title.language": "Tongue",
+        "title.exit": "Abandon Ship",
+        "title.hint": "Steer with the wheel, confirm to board",
+        "title.controls": "P1 WASD   -   P2 Arrows",
+        "title.tagline": "Hop to yer lily-pad harbors. Carts crush. The drink drowns. Ride the driftwood.",
+
+        // Chaos select
+        "chaos.window": "PICK YER PERIL",
+        "chaos.normal": "Calm Seas",
+        "chaos.insane": "Squall",
+        "chaos.ridiculous": "Kraken Waters",
+        "chaos.insiculous": "Davy Jones",
+        "chaos.normal.desc": "A fair crossing. Steady carts, honest sea turtles.",
+        "chaos.insane.desc": "Carts half again as fast, and the hourglass runs thin.",
+        "chaos.ridiculous.desc": "Turtles dive beneath ye - and a croc lurks in one harbor.",
+        "chaos.insiculous.desc": "Divin' turtles, a croc, fast carts, thin sand. Godspeed.",
+
+        // In-match HUD (numbers are formatted around these fragments)
+        "hud.score": "PLUNDER",
+        "hud.round": "VOYAGE",
+        "hud.homes": "HARBORS",
+        "hud.frogs": "FROGS",
+        "hud.p1": "P1",
+        "hud.p2": "P2",
+        "hud.pause_hint": "ESC to drop anchor",
+
+        // Game over
+        "over.window": "ALL FROGS TO THE LOCKER",
+        "over.score": "Plunder",
+        "over.round": "voyage",
+        "over.homes": "harbors",
+        "over.again": "SPACE / ENTER to sail again",
+        "over.hint": "ESC for the harbor screen",
+
+        // Pause menu
+        "pause.title": "ANCHORED",
+        "pause.resume": "Weigh Anchor",
+        "pause.restart": "Restart the Voyage",
+        "pause.quit_title": "Back to Port",
+        "pause.exit_game": "Abandon Ship",
+        "pause.hint": "ESC weighs anchor - SPACE confirms",
+
+        // Achievements page
+        "ach.window": "TROPHIES",
+        "ach.unlocked": "claimed",
+        "ach.hint": "ESC or SPACE to go back",
+        "ach.section.crossings": "Crossings",
+        "ach.section.skill": "Seamanship",
+        "ach.section.chaos_coop": "Peril & Crew",
+
+        // Achievement names + descriptions (id-keyed)
+        "ach.first_home.name": "First Safe Harbor",
+        "ach.first_home.desc": "Guide a frog into its first harbor.",
+        "ach.round_clear.name": "Full Fleet Home",
+        "ach.round_clear.desc": "Fill all five harbors in one voyage.",
+        "ach.homes_25.name": "Legend o' the Lily Pads",
+        "ach.homes_25.desc": "Fill 25 harbors in one sitting.",
+        "ach.deathless_round.name": "Nary a Scratch",
+        "ach.deathless_round.desc": "Clear a voyage without losin' a single life.",
+        "ach.speedy.name": "Swift as the Tide",
+        "ach.speedy.desc": "Make harbor with 15 or more seconds in the glass.",
+        "ach.score_5k.name": "Hoard o' Plunder",
+        "ach.score_5k.desc": "Amass 5,000 points o' plunder.",
+        "ach.insiculous_clear.name": "Escaped Davy Jones",
+        "ach.insiculous_clear.desc": "Clear a voyage in Davy Jones waters.",
+        "ach.coop_round.name": "Shipmates True",
+        "ach.coop_round.desc": "In a two-frog crew, both mates make harbor in one voyage.",
+    },
+)

@@ -1,13 +1,15 @@
 //! UI text and HUD: menus, the top score band, the bottom timer band, and
-//! the game-over overlay. World rendering is sprites + the board tilemap
-//! (drawn by the engine's default render path).
+//! the game-over overlay. Every player-facing string goes through
+//! `ctx.strings.tr(...)` (en + pirate locales; the title's Language item
+//! cycles). World rendering is sprites + the board tilemap (drawn by the
+//! engine's default render path).
 
 use engine_core::prelude::*;
 
 use crate::achievements::DISPLAY_SECTIONS;
 use crate::constants::*;
 use crate::gameplay::rules::attempt_timer;
-use crate::menu::mode_hint;
+use crate::menu::{chaos_label_key, mode_hint_key};
 use crate::types::*;
 
 impl FroggerGame {
@@ -26,34 +28,51 @@ impl FroggerGame {
 
     fn draw_title(&self, ctx: &mut GameContext, selection: u8) {
         let style = self.menu_style();
-        let panel = MenuPanel::new("INSICULOUS FROGGER", ctx.window_size / 2.0, 380.0, 4);
+        let strings = &ctx.strings;
+        let title = strings.tr("title.window").to_string();
+        let language_item =
+            format!("{}: {}", strings.tr("title.language"), strings.current_display_name());
+        let items = [
+            strings.tr("title.single").to_string(),
+            strings.tr("title.coop").to_string(),
+            strings.tr("title.achievements").to_string(),
+            language_item,
+            strings.tr("title.exit").to_string(),
+        ];
+        let hint = strings.tr("title.hint").to_string();
+        let controls = strings.tr("title.controls").to_string();
+        let tagline = strings.tr("title.tagline").to_string();
+
+        let panel = MenuPanel::new(&title, ctx.window_size / 2.0, 400.0, items.len());
         let mut y = panel.begin(ctx.ui, &style);
-        let items = ["1 Player", "2 Player Co-op", "Achievements", "Exit"];
         for (i, item) in items.iter().enumerate() {
             y = panel.item(ctx.ui, y, item, i as u8 == selection, &style);
         }
-        panel.hint(ctx.ui, "Navigate to move, confirm to select", &style);
+        panel.hint(ctx.ui, &hint, &style);
 
         let rect = panel.panel_rect();
         let cx = ctx.window_size.x / 2.0;
-        ctx.ui.label_centered("P1 WASD   -   P2 Arrows", Vec2::new(cx, rect.y + rect.height + 24.0));
-        ctx.ui.label_centered("Hop to the homes. Cars kill. Water kills. Ride the logs.",
-            Vec2::new(cx, rect.y + rect.height + 48.0));
+        ctx.ui.label_centered(&controls, Vec2::new(cx, rect.y + rect.height + 24.0));
+        ctx.ui.label_centered(&tagline, Vec2::new(cx, rect.y + rect.height + 48.0));
     }
 
     fn draw_mode_select(&self, ctx: &mut GameContext, selection: u8) {
         let style = self.menu_style();
-        let panel = MenuPanel::new("SELECT CHAOS MODE", ctx.window_size / 2.0, 400.0, ChaosMode::ALL.len());
+        let title = ctx.strings.tr("chaos.window").to_string();
+        let labels: Vec<String> = ChaosMode::ALL
+            .iter()
+            .map(|&m| ctx.strings.tr(chaos_label_key(m)).to_string())
+            .collect();
+        let hint_mode = ChaosMode::ALL[selection as usize % ChaosMode::ALL.len()];
+        let hint = ctx.strings.tr(mode_hint_key(hint_mode)).to_string();
+
+        let panel = MenuPanel::new(&title, ctx.window_size / 2.0, 400.0, ChaosMode::ALL.len());
         let mut y = panel.begin(ctx.ui, &style);
         for (i, &mode) in ChaosMode::ALL.iter().enumerate() {
             let c = ChaosTheme::for_mode(mode).banner_color;
-            y = panel.item_colored(ctx.ui, y, mode.label(), c, i as u8 == selection, &style);
+            y = panel.item_colored(ctx.ui, y, &labels[i], c, i as u8 == selection, &style);
         }
-        panel.hint(
-            ctx.ui,
-            mode_hint(ChaosMode::ALL[selection as usize % ChaosMode::ALL.len()]),
-            &style,
-        );
+        panel.hint(ctx.ui, &hint, &style);
     }
 
     fn draw_achievements(&self, ctx: &mut GameContext) {
@@ -61,12 +80,17 @@ impl FroggerGame {
         let cx = ctx.window_size.x / 2.0;
         let total = ctx.achievements.total();
         let unlocked = ctx.achievements.unlocked_count();
+        let window_title = ctx.strings.tr("ach.window").to_string();
+        let unlocked_word = ctx.strings.tr("ach.unlocked").to_string();
+        let hint = ctx.strings.tr("ach.hint").to_string();
 
-        let panel = MenuPanel::new("ACHIEVEMENTS", ctx.window_size / 2.0, ctx.window_size.x - 120.0, 13);
+        // Clamp so a shrunken window can't drive the panel width negative.
+        let panel_w = (ctx.window_size.x - 120.0).max(320.0);
+        let panel = MenuPanel::new(&window_title, ctx.window_size / 2.0, panel_w, 13);
         let first_y = panel.begin(ctx.ui, &style);
         let rect = panel.panel_rect();
         ctx.ui.label_centered(
-            &format!("{unlocked} / {total} unlocked"),
+            &format!("{unlocked} / {total} {unlocked_word}"),
             Vec2::new(cx, first_y - 8.0),
         );
 
@@ -78,8 +102,9 @@ impl FroggerGame {
         let desc_color = Color::new(0.75, 0.75, 0.8, 1.0);
         let header_color = Color::new(0.6, 0.75, 1.0, 1.0);
 
-        for (section, ids) in DISPLAY_SECTIONS {
-            ctx.ui.label_styled(section, Vec2::new(left, y), header_color, 16.0);
+        for (section_key, ids) in DISPLAY_SECTIONS {
+            let section = ctx.strings.tr(section_key).to_string();
+            ctx.ui.label_styled(&section, Vec2::new(left, y), header_color, 16.0);
             y += 22.0;
             for id in *ids {
                 let is_unlocked = ctx.achievements.is_unlocked(id);
@@ -91,19 +116,16 @@ impl FroggerGame {
                     ("[ ]", locked_color)
                 };
 
-                ctx.ui.label_styled(
-                    &format!("{marker} {}", ach.name),
-                    Vec2::new(left + 8.0, y),
-                    name_color,
-                    14.0,
-                );
-                ctx.ui.label_styled(&ach.description, Vec2::new(left + 52.0, y + 16.0), desc_color, 12.0);
+                let name_line = format!("{marker} {}", ach.name);
+                let desc = ach.description.clone();
+                ctx.ui.label_styled(&name_line, Vec2::new(left + 8.0, y), name_color, 14.0);
+                ctx.ui.label_styled(&desc, Vec2::new(left + 52.0, y + 16.0), desc_color, 12.0);
                 y += 36.0;
             }
             y += 6.0;
         }
 
-        panel.hint(ctx.ui, "ESC or SPACE to go back", &style);
+        panel.hint(ctx.ui, &hint, &style);
     }
 
     fn draw_gameplay(&self, ctx: &mut GameContext) {
@@ -123,38 +145,64 @@ impl FroggerGame {
 
         if self.state == GameState::GameOver {
             let style = self.menu_style();
-            let panel = MenuPanel::new("OUT OF FROGS", Vec2::new(cx, cy), 400.0, 2);
+            let title = ctx.strings.tr("over.window").to_string();
+            let again = ctx.strings.tr("over.again").to_string();
+            let hint = ctx.strings.tr("over.hint").to_string();
+            let score_line = self.final_score_line(ctx);
+            let panel = MenuPanel::new(&title, Vec2::new(cx, cy), 400.0, 2);
             let mut y = panel.begin(ctx.ui, &style);
-            y = panel.line(ctx.ui, y, &self.final_score_line(), &style);
-            panel.line(ctx.ui, y, "SPACE / ENTER to play again", &style);
-            panel.hint(ctx.ui, "ESC for title screen", &style);
+            y = panel.line(ctx.ui, y, &score_line, &style);
+            panel.line(ctx.ui, y, &again, &style);
+            panel.hint(ctx.ui, &hint, &style);
         }
 
         if self.pause.is_active() {
-            self.pause.draw(ctx.ui, ctx.window_size, &self.menu_style());
+            let style = self.menu_style();
+            let labels = PauseMenuLabels {
+                title: ctx.strings.tr("pause.title"),
+                items: [
+                    ctx.strings.tr("pause.resume"),
+                    ctx.strings.tr("pause.restart"),
+                    ctx.strings.tr("pause.quit_title"),
+                    ctx.strings.tr("pause.exit_game"),
+                ],
+                hint: ctx.strings.tr("pause.hint"),
+            };
+            self.pause.draw_labeled(ctx.ui, ctx.window_size, &style, &labels);
         }
     }
 
-    /// Top band: pooled score left, round center, per-frog lives right.
+    /// Top band: pooled score left, round + homes center, per-frog lives right.
     fn draw_hud(&self, ctx: &mut GameContext, cx: f32) {
-        ctx.ui.label(&format!("SCORE {}", self.score), Vec2::new(24.0, 16.0));
+        let score_word = ctx.strings.tr("hud.score").to_string();
+        let round_word = ctx.strings.tr("hud.round").to_string();
+        let homes_word = ctx.strings.tr("hud.homes").to_string();
+        ctx.ui.label(&format!("{score_word} {}", self.score), Vec2::new(24.0, 16.0));
         ctx.ui.label_centered(
-            &format!("ROUND {}  -  HOMES {}/5", self.round, self.homes.iter().filter(|&&h| h).count()),
+            &format!(
+                "{round_word} {}  -  {homes_word} {}/5",
+                self.round,
+                self.homes.iter().filter(|&&h| h).count()
+            ),
             Vec2::new(cx, 16.0),
         );
         match self.mode {
             GameMode::SinglePlayer => {
+                let frogs_word = ctx.strings.tr("hud.frogs").to_string();
                 let lives = self.frogs.first().map_or(0, |f| f.lives);
-                ctx.ui.label(&format!("FROGS {lives}"), Vec2::new(ctx.window_size.x - 130.0, 16.0));
+                ctx.ui.label(&format!("{frogs_word} {lives}"), Vec2::new(ctx.window_size.x - 130.0, 16.0));
             }
             GameMode::TwoPlayerCoop => {
+                let p1 = ctx.strings.tr("hud.p1").to_string();
+                let p2 = ctx.strings.tr("hud.p2").to_string();
                 let l1 = self.frogs.first().map_or(0, |f| f.lives);
                 let l2 = self.frogs.get(1).map_or(0, |f| f.lives);
-                ctx.ui.label(&format!("P1 {l1}  P2 {l2}"), Vec2::new(ctx.window_size.x - 160.0, 16.0));
+                ctx.ui.label(&format!("{p1} {l1}  {p2} {l2}"), Vec2::new(ctx.window_size.x - 160.0, 16.0));
             }
         }
         if self.state == GameState::Playing {
-            ctx.ui.label_styled("ESC to pause", Vec2::new(24.0, 42.0),
+            let pause_hint = ctx.strings.tr("hud.pause_hint").to_string();
+            ctx.ui.label_styled(&pause_hint, Vec2::new(24.0, 42.0),
                 Color::new(0.6, 0.6, 0.65, 1.0), 12.0);
         }
     }
@@ -167,6 +215,10 @@ impl FroggerGame {
         let bar_y = band_top + (BAND - bar_h) / 2.0;
         let count = self.frogs.len().max(1) as f32;
         let slot_w = ctx.window_size.x / count;
+        let player_words = [
+            ctx.strings.tr("hud.p1").to_string(),
+            ctx.strings.tr("hud.p2").to_string(),
+        ];
 
         for (i, frog) in self.frogs.iter().enumerate() {
             let margin = 60.0;
@@ -188,7 +240,7 @@ impl FroggerGame {
                 ctx.ui.rect(Rect::new(x + 2.0, bar_y + 2.0, (max_w - 4.0) * frac, bar_h - 4.0), color);
             }
             ctx.ui.label_styled(
-                &format!("P{}", i + 1),
+                &player_words[i.min(1)],
                 Vec2::new(x - 28.0, bar_y + bar_h - 2.0),
                 Color::new(0.7, 0.7, 0.75, 1.0),
                 12.0,
@@ -196,7 +248,12 @@ impl FroggerGame {
         }
     }
 
-    fn final_score_line(&self) -> String {
-        format!("Score {}  -  round {}  -  {} homes", self.score, self.round, self.total_homes)
+    fn final_score_line(&self, ctx: &GameContext) -> String {
+        format!(
+            "{} {}  -  {} {}  -  {} {}",
+            ctx.strings.tr("over.score"), self.score,
+            ctx.strings.tr("over.round"), self.round,
+            ctx.strings.tr("over.homes"), self.total_homes,
+        )
     }
 }

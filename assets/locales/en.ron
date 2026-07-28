@@ -1,0 +1,80 @@
+// English locale for Insiculous Frogger. Every key here must also exist in
+// pirate.ron (enforced by the locale_files_have_matching_keys test).
+LocaleFile(
+    version: 1,
+    display_name: "English",
+    strings: {
+        // Title screen
+        "title.window": "INSICULOUS FROGGER",
+        "title.single": "1 Player",
+        "title.coop": "2 Player Co-op",
+        "title.achievements": "Achievements",
+        "title.language": "Language",
+        "title.exit": "Exit",
+        "title.hint": "Navigate to move, confirm to select",
+        "title.controls": "P1 WASD   -   P2 Arrows",
+        "title.tagline": "Hop to the homes. Cars kill. Water kills. Ride the logs.",
+
+        // Chaos select
+        "chaos.window": "SELECT CHAOS MODE",
+        "chaos.normal": "Normal",
+        "chaos.insane": "Insane",
+        "chaos.ridiculous": "Ridiculous",
+        "chaos.insiculous": "Insiculous",
+        "chaos.normal.desc": "The classic crossing. Steady traffic, honest turtles.",
+        "chaos.insane.desc": "Traffic 50% faster and the clock runs short.",
+        "chaos.ridiculous.desc": "Turtles dive under you - and a croc squats in one home.",
+        "chaos.insiculous.desc": "Diving turtles, croc, fast lanes, short clock. Good luck.",
+
+        // In-match HUD (numbers are formatted around these fragments)
+        "hud.score": "SCORE",
+        "hud.round": "ROUND",
+        "hud.homes": "HOMES",
+        "hud.frogs": "FROGS",
+        "hud.p1": "P1",
+        "hud.p2": "P2",
+        "hud.pause_hint": "ESC to pause",
+
+        // Game over
+        "over.window": "OUT OF FROGS",
+        "over.score": "Score",
+        "over.round": "round",
+        "over.homes": "homes",
+        "over.again": "SPACE / ENTER to play again",
+        "over.hint": "ESC for title screen",
+
+        // Pause menu
+        "pause.title": "PAUSED",
+        "pause.resume": "Resume",
+        "pause.restart": "Restart",
+        "pause.quit_title": "Quit to Title",
+        "pause.exit_game": "Exit Game",
+        "pause.hint": "ESC resumes - SPACE confirms",
+
+        // Achievements page
+        "ach.window": "ACHIEVEMENTS",
+        "ach.unlocked": "unlocked",
+        "ach.hint": "ESC or SPACE to go back",
+        "ach.section.crossings": "Crossings",
+        "ach.section.skill": "Skill",
+        "ach.section.chaos_coop": "Chaos & Co-op",
+
+        // Achievement names + descriptions (id-keyed)
+        "ach.first_home.name": "Pond Pioneer",
+        "ach.first_home.desc": "Guide a frog into its first home.",
+        "ach.round_clear.name": "Full House",
+        "ach.round_clear.desc": "Fill all five homes in one round.",
+        "ach.homes_25.name": "Homecoming Hero",
+        "ach.homes_25.desc": "Fill 25 homes in one session.",
+        "ach.deathless_round.name": "Untouched Crossing",
+        "ach.deathless_round.desc": "Clear a round without losing a single life.",
+        "ach.speedy.name": "Swift Swimmer",
+        "ach.speedy.desc": "Reach home with 15 or more seconds to spare.",
+        "ach.score_5k.name": "High Hopper",
+        "ach.score_5k.desc": "Score 5,000 points.",
+        "ach.insiculous_clear.name": "Insiculous Crossing",
+        "ach.insiculous_clear.desc": "Clear a round in Insiculous mode.",
+        "ach.coop_round.name": "Tag Team",
+        "ach.coop_round.desc": "In co-op, both players fill a home in the same round.",
+    },
+)

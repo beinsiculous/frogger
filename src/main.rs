@@ -21,7 +21,9 @@ impl Game for FroggerGame {
             ctx.ui.set_default_font(font);
         }
 
-        achievements::register_all(ctx.achievements);
+        // Names/descriptions come from the locale tables; the title menu's
+        // Language item re-registers on locale switches.
+        achievements::register_all(ctx.achievements, ctx.strings);
 
         let tex = ctx.assets.create_solid_color(1, 1, [255, 255, 255, 255]).unwrap();
         self.tex_id = tex.id;
@@ -37,8 +39,6 @@ impl Game for FroggerGame {
     }
 
     fn update(&mut self, ctx: &mut GameContext) {
-        self.frame_count = self.frame_count.wrapping_add(1);
-
         match self.state.clone() {
             GameState::TitleScreen { selection } => self.update_title_input(ctx, selection),
             GameState::ModeSelect { selection } => self.update_mode_select_input(ctx, selection),

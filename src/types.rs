@@ -134,7 +134,6 @@ pub(crate) struct FroggerGame {
     pub(crate) state: GameState,
     pub(crate) mode: GameMode,
     pub(crate) chaos_mode: ChaosMode,
-    pub(crate) frame_count: u32,
 
     pub(crate) frogs: Vec<FrogState>,
     pub(crate) lanes: Vec<LaneState>,
@@ -180,7 +179,6 @@ impl Default for FroggerGame {
             state: GameState::TitleScreen { selection: 0 },
             mode: GameMode::SinglePlayer,
             chaos_mode: ChaosMode::Normal,
-            frame_count: 0,
             frogs: Vec::new(),
             lanes: Vec::new(),
             homes: [false; 5],

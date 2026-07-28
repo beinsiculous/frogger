@@ -46,9 +46,13 @@ impl FroggerGame {
         }
 
         self.handle_state_input(ctx);
-        if self.state == GameState::Playing {
+        // Lanes scroll during GameOver too, so traffic keeps flowing behind
+        // the overlay; only frog logic is gated on an active match.
+        if matches!(self.state, GameState::Playing | GameState::GameOver) {
             self.play_time += ctx.delta_time;
             self.advance_lanes(ctx.delta_time);
+        }
+        if self.state == GameState::Playing {
             self.step_frogs(ctx);
             self.step_respawns(ctx);
         }

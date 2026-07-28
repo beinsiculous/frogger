@@ -36,6 +36,14 @@ Co-op: two frogs at once — shared home slots and score, individual lives.
 - Lanes scroll on a torus: obstacles wrap seamlessly across the edges
   (collision uses modular distance, so edge-straddling trucks still hit).
 
+## Localization
+
+Fully localized (English + Pirate) following the engine's `ctx.strings`
+pattern: locale tables in `assets/locales/*.ron`, a `Language` title-menu
+item that cycles locales live (achievements re-register with translated
+names, unlock state untouched), and a per-locale font (Pirate uses
+BlackSamsGold).
+
 ## Chaos modes
 
 - **Normal** — the classic crossing.
