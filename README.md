@@ -11,7 +11,7 @@ Run from this directory:
 ```bash
 cargo run                    # play
 cargo run --features editor  # play inside the scene editor
-cargo test                   # 40 headless tests
+cargo test                   # 43 headless tests
 ```
 
 ## Controls
@@ -52,6 +52,49 @@ BlackSamsGold).
   periodically guards one home slot (enter while it's surfaced and you're
   lunch; it leaves — every round stays winnable).
 - **Insiculous** — all of the above at once.
+
+## The Deion Pivot: Chicken Coop
+
+Why did the chicken cross the road? Because in Phase G this game becomes
+**Chicken Coop** — the planned re-skin under the Deion pivot. (The neon
+frog skin above is what ships today; none of this is implemented yet.)
+
+- **The player is a chicken.** The oldest joke in the world, finally
+  playable: a chicken crossing the food-world traffic to get to the other
+  side. The title screen is allowed — encouraged — to literally ask the
+  question. Level names, achievements, and flavor text should mine every
+  crossing-the-road pun they can carry.
+- **Co-op is the pun.** Two players = two chickens = a co-op that is,
+  in fact, a chicken coop. Same mechanics as today: shared nest boxes and
+  score, individual lives.
+- **Home slots become the coop's nest boxes.** Proposal: each filled slot
+  shows a settled hen (or an egg) instead of today's glowing marker.
+- **The food traffic stays.** The DEION_STYLE §5 traffic proposals remain
+  live: road lanes as conveyor belts of rolling food carts (sushi rolls,
+  hot dogs, donuts), the river as soup, celery-stick and baguette logs,
+  snapping hot-dog buns for crocs, cracker turtles that sink into the
+  broth. The chicken replaces only the player and the home-row theming —
+  this supersedes §5's original casting (Deion hopping to the ice-cube
+  tray).
+- **Art rules:** style SSOT is `deion_assets/DEION_STYLE.md` (root
+  symlink, read-only; assumes the standard side-by-side checkout). 16 px
+  base cell, nearest filtering, 5x integer scale to `RENDER_UNIT = 80`.
+  Runtime assets arrive only via the F2 sync into `assets/sprites/`; AI
+  art is quarantined in `deion_assets/ai/` and never ships. The re-skin
+  also retires the in-code RGBA tileset in favor of real tile sheets
+  (roadmap F3 `gen_tiles`).
+
+**Open questions** (answered questions move up into the theme spec above
+and get DELETED from this list — live-docs convention):
+
+- Does Deion/Cubert cameo at all (background, achievement art, a secret
+  skin)? Jesse's call.
+- Final food-traffic castings — which of the §5 proposals ship?
+- The chicken's design — a new character needing Jesse's drawing and
+  castings sign-off.
+- Do the 2P chickens get distinct looks (e.g. hen/rooster)?
+- Egg mechanics — do eggs do anything (scoring, extra lives, laid on
+  logs?) or stay purely visual?
 
 ## What was learned
 
