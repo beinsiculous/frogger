@@ -80,8 +80,9 @@ frog skin above is what ships today; none of this is implemented yet.)
   symlink, read-only; assumes the standard side-by-side checkout). 16 px
   base cell, nearest filtering, 5x integer scale to `RENDER_UNIT = 80`.
   Runtime assets arrive only via the F2 sync into `assets/sprites/`; AI
-  art is quarantined in `deion_assets/ai/` and never ships. The re-skin
-  also retires the in-code RGBA tileset in favor of real tile sheets
+  art is quarantined in `deion_assets/ai/`; it may ship in FREE web builds,
+  never in paid/marketplace builds (DEION_STYLE.md §6, tiered Aug 19
+  2026). The re-skin also retires the in-code RGBA tileset in favor of real tile sheets
   (roadmap F3 `gen_tiles`).
 
 **Open questions** (answered questions move up into the theme spec above

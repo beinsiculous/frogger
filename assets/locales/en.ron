@@ -11,7 +11,7 @@ LocaleFile(
         "title.achievements": "Achievements",
         "title.language": "Language",
         "title.exit": "Exit",
-        "title.hint": "Navigate to move, confirm to select",
+        "title.hint": "Navigate to move - SPACE/ENTER, (A), or click to select",
         "title.controls": "P1 WASD   -   P2 Arrows",
         "title.tagline": "Hop to the homes. Cars kill. Water kills. Ride the logs.",
 
@@ -49,12 +49,12 @@ LocaleFile(
         "pause.restart": "Restart",
         "pause.quit_title": "Quit to Title",
         "pause.exit_game": "Exit Game",
-        "pause.hint": "ESC resumes - SPACE confirms",
+        "pause.hint": "ESC resumes - SPACE/ENTER or click confirms",
 
         // Achievements page
         "ach.window": "ACHIEVEMENTS",
         "ach.unlocked": "unlocked",
-        "ach.hint": "ESC or SPACE to go back",
+        "ach.hint": "ESC, SPACE, or click to go back",
         "ach.section.crossings": "Crossings",
         "ach.section.skill": "Skill",
         "ach.section.chaos_coop": "Chaos & Co-op",

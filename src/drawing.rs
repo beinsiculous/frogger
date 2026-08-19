@@ -9,7 +9,9 @@ use engine_core::prelude::*;
 use crate::achievements::DISPLAY_SECTIONS;
 use crate::constants::*;
 use crate::gameplay::rules::attempt_timer;
-use crate::menu::{chaos_label_key, mode_hint_key};
+use crate::menu::{
+    achievements_panel, chaos_label_key, chaos_panel, mode_hint_key, title_panel,
+};
 use crate::types::*;
 
 impl FroggerGame {
@@ -43,7 +45,7 @@ impl FroggerGame {
         let controls = strings.tr("title.controls").to_string();
         let tagline = strings.tr("title.tagline").to_string();
 
-        let panel = MenuPanel::new(&title, ctx.window_size / 2.0, 400.0, items.len());
+        let panel = title_panel(&title, ctx.window_size);
         let mut y = panel.begin(ctx.ui, &style);
         for (i, item) in items.iter().enumerate() {
             y = panel.item(ctx.ui, y, item, i as u8 == selection, &style);
@@ -66,7 +68,7 @@ impl FroggerGame {
         let hint_mode = ChaosMode::ALL[selection as usize % ChaosMode::ALL.len()];
         let hint = ctx.strings.tr(mode_hint_key(hint_mode)).to_string();
 
-        let panel = MenuPanel::new(&title, ctx.window_size / 2.0, 400.0, ChaosMode::ALL.len());
+        let panel = chaos_panel(&title, ctx.window_size);
         let mut y = panel.begin(ctx.ui, &style);
         for (i, &mode) in ChaosMode::ALL.iter().enumerate() {
             let c = ChaosTheme::for_mode(mode).banner_color;
@@ -84,9 +86,7 @@ impl FroggerGame {
         let unlocked_word = ctx.strings.tr("ach.unlocked").to_string();
         let hint = ctx.strings.tr("ach.hint").to_string();
 
-        // Clamp so a shrunken window can't drive the panel width negative.
-        let panel_w = (ctx.window_size.x - 120.0).max(320.0);
-        let panel = MenuPanel::new(&window_title, ctx.window_size / 2.0, panel_w, 13);
+        let panel = achievements_panel(&window_title, ctx.window_size);
         let first_y = panel.begin(ctx.ui, &style);
         let rect = panel.panel_rect();
         ctx.ui.label_centered(

@@ -26,7 +26,7 @@ impl FroggerGame {
         // whole update freezes — no lane movement, no timers; the overlay
         // draws in the UI pass and the grid re-emits without advancing.
         if self.state == GameState::Playing {
-            let action = self.pause.update(ctx.players, ctx.input);
+            let action = self.pause.update(ctx.players, ctx.input, ctx.window_size);
             ctx.time_scale = self.pause.time_scale();
             match action {
                 PauseAction::Restart => { self.start_game(ctx); return; }

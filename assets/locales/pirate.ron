@@ -13,7 +13,7 @@ LocaleFile(
         "title.achievements": "Trophies o' the Crossing",
         "title.language": "Tongue",
         "title.exit": "Abandon Ship",
-        "title.hint": "Steer with the wheel, confirm to board",
+        "title.hint": "Steer with the wheel - SPACE/ENTER, (A), or click to board",
         "title.controls": "P1 WASD   -   P2 Arrows",
         "title.tagline": "Hop to yer lily-pad harbors. Carts crush. The drink drowns. Ride the driftwood.",
 
@@ -51,12 +51,12 @@ LocaleFile(
         "pause.restart": "Restart the Voyage",
         "pause.quit_title": "Back to Port",
         "pause.exit_game": "Abandon Ship",
-        "pause.hint": "ESC weighs anchor - SPACE confirms",
+        "pause.hint": "ESC weighs anchor - SPACE/ENTER or click confirms",
 
         // Achievements page
         "ach.window": "TROPHIES",
         "ach.unlocked": "claimed",
-        "ach.hint": "ESC or SPACE to go back",
+        "ach.hint": "ESC, SPACE, or a click to sail back",
         "ach.section.crossings": "Crossings",
         "ach.section.skill": "Seamanship",
         "ach.section.chaos_coop": "Peril & Crew",

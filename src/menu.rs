@@ -5,6 +5,24 @@
 use engine_core::prelude::*;
 use crate::types::*;
 
+/// Panel layouts shared by the input half (mouse hit-testing here) and the
+/// drawing half (`drawing.rs`) — the geometry must match or clicks land
+/// beside the drawn rows. Titles only affect the label, never the layout.
+pub(crate) fn title_panel(title: &str, window_size: Vec2) -> MenuPanel {
+    MenuPanel::new(title, window_size / 2.0, 400.0, TITLE_ITEMS)
+}
+pub(crate) fn chaos_panel(title: &str, window_size: Vec2) -> MenuPanel {
+    MenuPanel::new(title, window_size / 2.0, 400.0, ChaosMode::ALL.len())
+}
+pub(crate) fn achievements_panel(title: &str, window_size: Vec2) -> MenuPanel {
+    // Clamp so a shrunken window can't drive the panel width negative.
+    let width = (window_size.x - 120.0).max(320.0);
+    MenuPanel::new(title, window_size / 2.0, width, 13)
+}
+
+/// Rows on the title screen: 1P, co-op, achievements, language, exit.
+pub(crate) const TITLE_ITEMS: usize = 5;
+
 /// Locale key for a chaos mode's menu label.
 pub(crate) fn chaos_label_key(mode: ChaosMode) -> &'static str {
     match mode {
@@ -28,10 +46,15 @@ pub(crate) fn mode_hint_key(mode: ChaosMode) -> &'static str {
 impl FroggerGame {
     pub(crate) fn update_title_input(&mut self, ctx: &mut GameContext, selection: u8) {
         let input = MenuInput::read(ctx.input);
-        let selection = input.navigate(selection, 5);
+        let mouse = title_panel("", ctx.window_size).mouse_select(ctx.input);
+        let selection = mouse.hovered.unwrap_or(selection);
+        let mut selection = input.navigate(selection, TITLE_ITEMS as u8);
+        if let Some(row) = mouse.clicked {
+            selection = row;
+        }
         self.state = GameState::TitleScreen { selection };
 
-        if input.confirm {
+        if input.confirm || mouse.clicked.is_some() {
             match selection {
                 0 => {
                     self.mode = GameMode::SinglePlayer;
@@ -56,20 +79,30 @@ impl FroggerGame {
 
     pub(crate) fn update_achievements_input(&mut self, ctx: &mut GameContext) {
         let input = MenuInput::read(ctx.input);
-        if input.back || input.confirm {
+        // The page is one big non-selectable list: any click on it dismisses,
+        // same as confirm/back.
+        // Whole-window dismiss: clicks on headers/margins count too, not
+        // just the row bands (the page is one big info sheet).
+        let click_dismiss = achievements_panel("", ctx.window_size).clicked_inside(ctx.input);
+        if input.back || input.confirm || click_dismiss {
             self.state = GameState::TitleScreen { selection: 2 };
         }
     }
 
     pub(crate) fn update_mode_select_input(&mut self, ctx: &mut GameContext, selection: u8) {
         let input = MenuInput::read(ctx.input);
+        let mouse = chaos_panel("", ctx.window_size).mouse_select(ctx.input);
         let count = ChaosMode::ALL.len() as u8;
-        let selection = input.navigate(selection, count);
+        let selection = mouse.hovered.unwrap_or(selection);
+        let mut selection = input.navigate(selection, count);
+        if let Some(row) = mouse.clicked {
+            selection = row;
+        }
         self.state = GameState::ModeSelect { selection };
 
         if input.back {
             self.state = GameState::TitleScreen { selection: 0 };
-        } else if input.confirm {
+        } else if input.confirm || mouse.clicked.is_some() {
             self.chaos_mode = ChaosMode::ALL[selection as usize];
             // Mirror the runtime selection into the engine context so any
             // code reading ctx.chaos_mode agrees with self.chaos_mode.
