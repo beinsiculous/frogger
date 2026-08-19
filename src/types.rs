@@ -130,7 +130,7 @@ pub(crate) enum DeathCause {
     Croc,
 }
 
-pub(crate) struct FroggerGame {
+pub struct FroggerGame {
     pub(crate) state: GameState,
     pub(crate) mode: GameMode,
     pub(crate) chaos_mode: ChaosMode,
