@@ -28,9 +28,9 @@ use types::*;
 pub use types::FroggerGame;
 
 /// The shared `GameConfig` for every target. Entry points add their own
-/// platform extras on top (native: save paths anchored to the game dir;
-/// web: nothing — no save paths means in-memory achievements and default
-/// input bindings).
+/// platform extras on top — both set save paths (native: JSON files
+/// anchored to the game dir; web: `beinsiculous.games.frogger.*`
+/// localStorage keys per the engine's `docs/WEB_SAVES.md`).
 ///
 /// `asset_base` must be an ANCHORED base: native callers pass an absolute
 /// path (`main.rs` derives it from `game_root!()` so the cwd never

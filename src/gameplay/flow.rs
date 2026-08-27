@@ -175,8 +175,15 @@ impl FroggerGame {
     }
 
     /// Out of frogs. The lanes keep scrolling behind the overlay; the next
-    /// start clears everything.
-    pub(crate) fn finish_game(&mut self) {
+    /// start clears everything. The pooled score is submitted exactly once
+    /// here — the only transition into GameOver — under the mode's
+    /// high-score list (co-op shares one score, so one entry).
+    pub(crate) fn finish_game(&mut self, ctx: &mut GameContext) {
+        let mode = match self.mode {
+            GameMode::SinglePlayer => "single",
+            GameMode::TwoPlayerCoop => "coop",
+        };
+        ctx.scores.submit(mode, u64::from(self.score));
         self.state = GameState::GameOver;
     }
 

@@ -210,7 +210,7 @@ impl FroggerGame {
             }
         }
         if self.frogs.iter().all(|f| f.retired) && self.state == GameState::Playing {
-            self.finish_game();
+            self.finish_game(ctx);
         }
     }
 

@@ -11,6 +11,7 @@ use crate::constants::*;
 use crate::gameplay::rules::attempt_timer;
 use crate::menu::{
     achievements_panel, chaos_label_key, chaos_panel, mode_hint_key, title_panel,
+    TitleItem, TITLE_ITEMS,
 };
 use crate::types::*;
 
@@ -32,15 +33,22 @@ impl FroggerGame {
         let style = self.menu_style();
         let strings = &ctx.strings;
         let title = strings.tr("title.window").to_string();
-        let language_item =
-            format!("{}: {}", strings.tr("title.language"), strings.current_display_name());
-        let items = [
-            strings.tr("title.single").to_string(),
-            strings.tr("title.coop").to_string(),
-            strings.tr("title.achievements").to_string(),
-            language_item,
-            strings.tr("title.exit").to_string(),
-        ];
+        // Rows come from the same TITLE_ITEMS list the input half hit-tests
+        // against, so the drawn panel and the click geometry always agree.
+        let items: Vec<String> = TITLE_ITEMS
+            .iter()
+            .map(|item| match item {
+                TitleItem::Single => strings.tr("title.single").to_string(),
+                TitleItem::Coop => strings.tr("title.coop").to_string(),
+                TitleItem::Achievements => strings.tr("title.achievements").to_string(),
+                TitleItem::Language => format!(
+                    "{}: {}",
+                    strings.tr("title.language"),
+                    strings.current_display_name()
+                ),
+                TitleItem::Exit => strings.tr("title.exit").to_string(),
+            })
+            .collect();
         let hint = strings.tr("title.hint").to_string();
         let controls = strings.tr("title.controls").to_string();
         let tagline = strings.tr("title.tagline").to_string();
