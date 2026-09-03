@@ -183,7 +183,7 @@ impl FroggerGame {
             GameMode::SinglePlayer => "single",
             GameMode::TwoPlayerCoop => "coop",
         };
-        ctx.scores.submit(mode, u64::from(self.score));
+        let _ = ctx.scores.submit(mode, u64::from(self.score));
         self.state = GameState::GameOver;
     }
 
