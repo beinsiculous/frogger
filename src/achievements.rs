@@ -1,6 +1,7 @@
 //! Frogger achievement definitions.
 //!
-//! Registered once in `init()` with names/descriptions from the locale
+//! Registered through `Game::register_achievements` — the engine calls it before the window
+//! opens, which is what lets `--achievements-manifest` export the list with no GPU, with names/descriptions from the locale
 //! tables, and re-registered on locale switches (id-keyed insert — unlock
 //! state survives). Home/score achievements unlock from `fill_home`, round
 //! achievements from `clear_round` (see `gameplay/flow`).
@@ -36,7 +37,7 @@ pub(crate) const DISPLAY_SECTIONS: &[(&str, &[&str])] = &[
 
 /// Register every Frogger achievement with names/descriptions from the
 /// locale tables (`ach.<id>.name` / `ach.<id>.desc`). Called from
-/// `Game::init` AND again after a locale switch — `register` is an id-keyed
+/// `Game::register_achievements` AND again after a locale switch — `register` is an id-keyed
 /// insert, so re-registering refreshes the display strings without touching
 /// unlock state.
 pub(crate) fn register_all(mgr: &mut AchievementManager, strings: &Strings) {

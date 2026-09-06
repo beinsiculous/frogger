@@ -46,6 +46,12 @@ pub fn game_config(asset_base: &str) -> GameConfig {
 }
 
 impl Game for FroggerGame {
+    fn register_achievements(&self, achievements: &mut AchievementManager, strings: &Strings) {
+        // Names and descriptions come from the locale tables; the title menu's Language item
+        // re-registers on a locale switch.
+        achievements::register_all(achievements, strings);
+    }
+
     fn init(&mut self, ctx: &mut GameContext) {
         // Resolve against the configured asset base so the same relative
         // path works natively (game dir) and on the web (VFS keys).
@@ -53,10 +59,6 @@ impl Game for FroggerGame {
         if let Ok(font) = ctx.ui.load_font_file(&font_path.to_string_lossy()) {
             ctx.ui.set_default_font(font);
         }
-
-        // Names/descriptions come from the locale tables; the title menu's
-        // Language item re-registers on locale switches.
-        achievements::register_all(ctx.achievements, ctx.strings);
 
         let tex = ctx.assets.create_solid_color(1, 1, [255, 255, 255, 255]).unwrap();
         self.tex_id = tex.id;
