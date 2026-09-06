@@ -14,6 +14,8 @@ cargo run --features editor  # play inside the scene editor
 cargo test                   # 43 headless tests
 ```
 
+The same build runs in the browser at [beinsiculous.com/playground/frogger/](https://beinsiculous.com/playground/frogger/): the game inside the editor, layout only — the rules are compiled in and nothing you change there persists.
+
 ## Controls
 
 | Action | P1 | P2 | Gamepad |
