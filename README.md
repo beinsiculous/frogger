@@ -78,8 +78,8 @@ frog skin above is what ships today; none of this is implemented yet.)
   broth. The chicken replaces only the player and the home-row theming —
   this supersedes §5's original casting (Deion hopping to the ice-cube
   tray).
-- **Art rules:** style SSOT is `deion_assets/DEION_STYLE.md` (root
-  symlink, read-only; assumes the standard side-by-side checkout). 16 px
+- **Art rules:** style SSOT is `deion_assets/DEION_STYLE.md` (the
+  `deion_assets -> ../../deion_assets` symlink, read-only — the working set's layout). 16 px
   base cell, nearest filtering, 5x integer scale to `RENDER_UNIT = 80`.
   Runtime assets arrive only via the F2 sync into `assets/sprites/`; AI
   art is quarantined in `deion_assets/ai/`; it may ship in FREE web builds,
