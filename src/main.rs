@@ -15,5 +15,14 @@ fn main() {
     #[cfg(feature = "editor")]
     editor_integration::run_game_with_editor(FroggerGame::default(), config).unwrap();
     #[cfg(not(feature = "editor"))]
-    engine_core::prelude::run_game(FroggerGame::default(), config).unwrap();
+    {
+        // One design size: the board and the HUD are laid out for 720x768 and
+        // the world never scales with a native window, so a smaller one would
+        // crop them both and a larger one would float them. Only the bare game
+        // is locked — the editor needs room for its panels, and the web page
+        // scales the whole canvas instead.
+        let mut config = config;
+        config.resizable = false;
+        engine_core::prelude::run_game(FroggerGame::default(), config).unwrap();
+    }
 }

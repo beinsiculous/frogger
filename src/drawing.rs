@@ -7,8 +7,8 @@
 use engine_core::prelude::*;
 
 use crate::achievements::DISPLAY_SECTIONS;
-use crate::constants::*;
 use crate::gameplay::rules::attempt_timer;
+use crate::hud;
 use crate::menu::{
     achievements_panel, chaos_label_key, chaos_panel, mode_hint_key, title_panel,
     TitleItem, TITLE_ITEMS,
@@ -140,7 +140,7 @@ impl FroggerGame {
         let cx = ctx.window_size.x / 2.0;
         let cy = ctx.window_size.y / 2.0;
 
-        self.draw_hud(ctx, cx);
+        self.draw_hud(ctx);
         self.draw_timer_bars(ctx);
 
         let theme = ChaosTheme::for_mode(self.chaos_mode);
@@ -148,7 +148,7 @@ impl FroggerGame {
             let color = Color::new(
                 theme.banner_color.x, theme.banner_color.y, theme.banner_color.z, theme.banner_color.w,
             );
-            ctx.ui.label_centered_styled(banner, Vec2::new(cx, ctx.window_size.y - 14.0), color, 14.0);
+            ctx.ui.label_centered_styled(banner, hud::chaos_banner(ctx.window_size), color, 14.0);
         }
 
         if self.state == GameState::GameOver {
@@ -180,76 +180,63 @@ impl FroggerGame {
         }
     }
 
-    /// Top band: pooled score left, round + homes center, per-frog lives right.
-    fn draw_hud(&self, ctx: &mut GameContext, cx: f32) {
+    /// Top band: pooled score left, round + nests center. The nests rise into
+    /// this band, so its first text row is the only one clear of their roofs.
+    /// The lives are world sprites now, down in the bottom band.
+    fn draw_hud(&self, ctx: &mut GameContext) {
         let score_word = ctx.strings.tr("hud.score").to_string();
         let round_word = ctx.strings.tr("hud.round").to_string();
         let homes_word = ctx.strings.tr("hud.homes").to_string();
-        ctx.ui.label(&format!("{score_word} {}", self.score), Vec2::new(24.0, 16.0));
+        ctx.ui.label(
+            &format!("{score_word} {}", self.score),
+            hud::score(ctx.window_size),
+        );
         ctx.ui.label_centered(
             &format!(
                 "{round_word} {}  -  {homes_word} {}/5",
                 self.round,
                 self.homes.iter().filter(|&&h| h).count()
             ),
-            Vec2::new(cx, 16.0),
+            hud::round_line(ctx.window_size),
         );
-        match self.mode {
-            GameMode::SinglePlayer => {
-                let frogs_word = ctx.strings.tr("hud.frogs").to_string();
-                let lives = self.frogs.first().map_or(0, |f| f.lives);
-                ctx.ui.label(&format!("{frogs_word} {lives}"), Vec2::new(ctx.window_size.x - 130.0, 16.0));
-            }
-            GameMode::TwoPlayerCoop => {
-                let p1 = ctx.strings.tr("hud.p1").to_string();
-                let p2 = ctx.strings.tr("hud.p2").to_string();
-                let l1 = self.frogs.first().map_or(0, |f| f.lives);
-                let l2 = self.frogs.get(1).map_or(0, |f| f.lives);
-                ctx.ui.label(&format!("{p1} {l1}  {p2} {l2}"), Vec2::new(ctx.window_size.x - 160.0, 16.0));
-            }
-        }
         if self.state == GameState::Playing {
             let pause_hint = ctx.strings.tr("hud.pause_hint").to_string();
-            ctx.ui.label_styled(&pause_hint, Vec2::new(24.0, 42.0),
+            ctx.ui.label_styled(&pause_hint, hud::pause_hint(ctx.window_size),
                 Color::new(0.6, 0.6, 0.65, 1.0), 12.0);
         }
     }
 
-    /// Bottom band: one attempt-timer bar per frog (P1 left, P2 right).
+    /// Bottom band: one attempt-timer bar per chicken (P1 left, P2 right),
+    /// with that player's life icons riding above it. Every position comes
+    /// from `hud`, so the bars stay on the board however the window is sized.
     fn draw_timer_bars(&self, ctx: &mut GameContext) {
         let full = attempt_timer(self.chaos_mode);
-        let band_top = ctx.window_size.y - BAND;
-        let bar_h = 14.0;
-        let bar_y = band_top + (BAND - bar_h) / 2.0;
-        let count = self.frogs.len().max(1) as f32;
-        let slot_w = ctx.window_size.x / count;
+        let count = self.chickens.len().max(1);
         let player_words = [
             ctx.strings.tr("hud.p1").to_string(),
             ctx.strings.tr("hud.p2").to_string(),
         ];
 
-        for (i, frog) in self.frogs.iter().enumerate() {
-            let margin = 60.0;
-            let max_w = slot_w - 2.0 * margin;
-            let x = i as f32 * slot_w + margin;
-            let frac = (frog.timer / full).clamp(0.0, 1.0);
-            let color = if frog.retired {
+        for (i, chicken) in self.chickens.iter().enumerate() {
+            let bar = hud::timer_bar(ctx.window_size, i, count);
+            let frac = (chicken.timer / full).clamp(0.0, 1.0);
+            let color = if chicken.retired {
                 Color::new(0.3, 0.3, 0.35, 1.0)
             } else if frac < 0.25 {
                 Color::new(1.0, 0.3, 0.25, 1.0)
             } else {
                 Color::new(0.4, 0.95, 0.5, 1.0)
             };
-            ctx.ui.rect_border(
-                Rect::new(x, bar_y, max_w, bar_h),
-                Color::new(0.5, 0.5, 0.55, 1.0), 1.0, 2.0,
-            );
-            if !frog.retired && frac > 0.0 {
-                ctx.ui.rect(Rect::new(x + 2.0, bar_y + 2.0, (max_w - 4.0) * frac, bar_h - 4.0), color);
+            ctx.ui.rect_border(bar, Color::new(0.5, 0.5, 0.55, 1.0), 1.0, 2.0);
+            if !chicken.retired && frac > 0.0 {
+                ctx.ui.rect(
+                    Rect::new(bar.x + 2.0, bar.y + 2.0, (bar.width - 4.0) * frac, bar.height - 4.0),
+                    color,
+                );
             }
             ctx.ui.label_styled(
                 &player_words[i.min(1)],
-                Vec2::new(x - 28.0, bar_y + bar_h - 2.0),
+                hud::timer_label(ctx.window_size, i, count),
                 Color::new(0.7, 0.7, 0.75, 1.0),
                 12.0,
             );

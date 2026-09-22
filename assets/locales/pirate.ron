@@ -1,5 +1,5 @@
-// Pirate locale for Insiculous Frogger — same key set as en.ron (enforced
-// by the locale_files_have_matching_keys test). Also swaps the font.
+// Pirate locale for Chicken Coop — same key set as en.ron (enforced by the
+// locale_files_have_matching_keys test). Also swaps the font.
 LocaleFile(
     version: 1,
     display_name: "Pirate",
@@ -7,15 +7,15 @@ LocaleFile(
     font: Some("fonts/BlackSamsGold-ej5e.ttf"),
     strings: {
         // Title screen
-        "title.window": "INSICULOUS FROGGER",
+        "title.window": "CHICKEN COOP O' THE SEAS",
         "title.single": "Lone Deckhand",
-        "title.coop": "Two-Frog Crew",
+        "title.coop": "Two-Bird Crew",
         "title.achievements": "Trophies o' the Crossing",
         "title.language": "Tongue",
         "title.exit": "Abandon Ship",
         "title.hint": "Steer with the wheel - SPACE/ENTER, (A), or click to board",
         "title.controls": "P1 WASD   -   P2 Arrows",
-        "title.tagline": "Hop to yer lily-pad harbors. Carts crush. The drink drowns. Ride the driftwood.",
+        "title.tagline": "Strut to yer nests. Carts crush. The soup drowns. Ride the rafts.",
 
         // Chaos select
         "chaos.window": "PICK YER PERIL",
@@ -23,25 +23,24 @@ LocaleFile(
         "chaos.insane": "Squall",
         "chaos.ridiculous": "Kraken Waters",
         "chaos.insiculous": "Davy Jones",
-        "chaos.normal.desc": "A fair crossing. Steady carts, honest sea turtles.",
+        "chaos.normal.desc": "A fair crossing. Steady carts, honest crackers.",
         "chaos.insane.desc": "Carts half again as fast, and the hourglass runs thin.",
-        "chaos.ridiculous.desc": "Turtles dive beneath ye - and a croc lurks in one harbor.",
-        "chaos.insiculous.desc": "Divin' turtles, a croc, fast carts, thin sand. Godspeed.",
+        "chaos.ridiculous.desc": "Crackers sink beneath ye - and a bun snaps in one nest.",
+        "chaos.insiculous.desc": "Sinkin' crackers, a snappin' bun, fast carts, thin sand. Godspeed.",
 
         // In-match HUD (numbers are formatted around these fragments)
         "hud.score": "PLUNDER",
         "hud.round": "VOYAGE",
-        "hud.homes": "HARBORS",
-        "hud.frogs": "FROGS",
+        "hud.homes": "NESTS",
         "hud.p1": "P1",
         "hud.p2": "P2",
         "hud.pause_hint": "ESC to drop anchor",
 
         // Game over
-        "over.window": "ALL FROGS TO THE LOCKER",
+        "over.window": "ALL CHICKENS TO THE LOCKER",
         "over.score": "Plunder",
         "over.round": "voyage",
-        "over.homes": "harbors",
+        "over.homes": "nests",
         "over.again": "SPACE / ENTER to sail again",
         "over.hint": "ESC for the harbor screen",
 
@@ -62,21 +61,21 @@ LocaleFile(
         "ach.section.chaos_coop": "Peril & Crew",
 
         // Achievement names + descriptions (id-keyed)
-        "ach.first_home.name": "First Safe Harbor",
-        "ach.first_home.desc": "Guide a frog into its first harbor.",
+        "ach.first_home.name": "First Safe Nest",
+        "ach.first_home.desc": "Guide a chicken into its first nest.",
         "ach.round_clear.name": "Full Fleet Home",
-        "ach.round_clear.desc": "Fill all five harbors in one voyage.",
-        "ach.homes_25.name": "Legend o' the Lily Pads",
-        "ach.homes_25.desc": "Fill 25 harbors in one sitting.",
+        "ach.round_clear.desc": "Fill all five nests in one voyage.",
+        "ach.homes_25.name": "Legend o' the Coop",
+        "ach.homes_25.desc": "Fill 25 nests in one sitting.",
         "ach.deathless_round.name": "Nary a Scratch",
         "ach.deathless_round.desc": "Clear a voyage without losin' a single life.",
         "ach.speedy.name": "Swift as the Tide",
-        "ach.speedy.desc": "Make harbor with 15 or more seconds in the glass.",
+        "ach.speedy.desc": "Reach a nest with 15 or more seconds in the glass.",
         "ach.score_5k.name": "Hoard o' Plunder",
         "ach.score_5k.desc": "Amass 5,000 points o' plunder.",
         "ach.insiculous_clear.name": "Escaped Davy Jones",
         "ach.insiculous_clear.desc": "Clear a voyage in Davy Jones waters.",
         "ach.coop_round.name": "Shipmates True",
-        "ach.coop_round.desc": "In a two-frog crew, both mates make harbor in one voyage.",
+        "ach.coop_round.desc": "In a two-bird crew, both mates reach a nest in one voyage.",
     },
 )

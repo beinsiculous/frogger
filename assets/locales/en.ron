@@ -1,11 +1,11 @@
-// English locale for Insiculous Frogger. Every key here must also exist in
+// English locale for Chicken Coop. Every key here must also exist in
 // pirate.ron (enforced by the locale_files_have_matching_keys test).
 LocaleFile(
     version: 1,
     display_name: "English",
     strings: {
         // Title screen
-        "title.window": "INSICULOUS FROGGER",
+        "title.window": "CHICKEN COOP",
         "title.single": "1 Player",
         "title.coop": "2 Player Co-op",
         "title.achievements": "Achievements",
@@ -13,7 +13,7 @@ LocaleFile(
         "title.exit": "Exit",
         "title.hint": "Navigate to move - SPACE/ENTER, (A), or click to select",
         "title.controls": "P1 WASD   -   P2 Arrows",
-        "title.tagline": "Hop to the homes. Cars kill. Water kills. Ride the logs.",
+        "title.tagline": "Cross to the nests. Carts crush. Soup drowns. Ride the rafts.",
 
         // Chaos select
         "chaos.window": "SELECT CHAOS MODE",
@@ -21,25 +21,24 @@ LocaleFile(
         "chaos.insane": "Insane",
         "chaos.ridiculous": "Ridiculous",
         "chaos.insiculous": "Insiculous",
-        "chaos.normal.desc": "The classic crossing. Steady traffic, honest turtles.",
-        "chaos.insane.desc": "Traffic 50% faster and the clock runs short.",
-        "chaos.ridiculous.desc": "Turtles dive under you - and a croc squats in one home.",
-        "chaos.insiculous.desc": "Diving turtles, croc, fast lanes, short clock. Good luck.",
+        "chaos.normal.desc": "The classic crossing. Steady carts, honest crackers.",
+        "chaos.insane.desc": "Carts 50% faster and the clock runs short.",
+        "chaos.ridiculous.desc": "Crackers sink under you - and a bun snaps in one nest.",
+        "chaos.insiculous.desc": "Sinking crackers, a snapping bun, fast belts, short clock. Good luck.",
 
         // In-match HUD (numbers are formatted around these fragments)
         "hud.score": "SCORE",
         "hud.round": "ROUND",
-        "hud.homes": "HOMES",
-        "hud.frogs": "FROGS",
+        "hud.homes": "NESTS",
         "hud.p1": "P1",
         "hud.p2": "P2",
         "hud.pause_hint": "ESC to pause",
 
         // Game over
-        "over.window": "OUT OF FROGS",
+        "over.window": "OUT OF CHICKENS",
         "over.score": "Score",
         "over.round": "round",
-        "over.homes": "homes",
+        "over.homes": "nests",
         "over.again": "SPACE / ENTER to play again",
         "over.hint": "ESC for title screen",
 
@@ -60,21 +59,21 @@ LocaleFile(
         "ach.section.chaos_coop": "Chaos & Co-op",
 
         // Achievement names + descriptions (id-keyed)
-        "ach.first_home.name": "Pond Pioneer",
-        "ach.first_home.desc": "Guide a frog into its first home.",
+        "ach.first_home.name": "Coop Pioneer",
+        "ach.first_home.desc": "Guide a chicken into its first nest.",
         "ach.round_clear.name": "Full House",
-        "ach.round_clear.desc": "Fill all five homes in one round.",
+        "ach.round_clear.desc": "Fill all five nests in one round.",
         "ach.homes_25.name": "Homecoming Hero",
-        "ach.homes_25.desc": "Fill 25 homes in one session.",
+        "ach.homes_25.desc": "Fill 25 nests in one session.",
         "ach.deathless_round.name": "Untouched Crossing",
         "ach.deathless_round.desc": "Clear a round without losing a single life.",
-        "ach.speedy.name": "Swift Swimmer",
-        "ach.speedy.desc": "Reach home with 15 or more seconds to spare.",
+        "ach.speedy.name": "Swift Strutter",
+        "ach.speedy.desc": "Reach a nest with 15 or more seconds to spare.",
         "ach.score_5k.name": "High Hopper",
         "ach.score_5k.desc": "Score 5,000 points.",
         "ach.insiculous_clear.name": "Insiculous Crossing",
         "ach.insiculous_clear.desc": "Clear a round in Insiculous mode.",
         "ach.coop_round.name": "Tag Team",
-        "ach.coop_round.desc": "In co-op, both players fill a home in the same round.",
+        "ach.coop_round.desc": "In co-op, both players fill a nest in the same round.",
     },
 )

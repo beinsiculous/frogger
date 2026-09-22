@@ -1,4 +1,4 @@
-//! Frogger achievement definitions.
+//! Chicken Coop achievement definitions.
 //!
 //! Registered through `Game::register_achievements` — the engine calls it before the window
 //! opens, which is what lets `--achievements-manifest` export the list with no GPU, with names/descriptions from the locale
@@ -35,7 +35,7 @@ pub(crate) const DISPLAY_SECTIONS: &[(&str, &[&str])] = &[
     ("ach.section.chaos_coop", &[INSICULOUS_CLEAR, COOP_ROUND]),
 ];
 
-/// Register every Frogger achievement with names/descriptions from the
+/// Register every Chicken Coop achievement with names/descriptions from the
 /// locale tables (`ach.<id>.name` / `ach.<id>.desc`). Called from
 /// `Game::register_achievements` AND again after a locale switch — `register` is an id-keyed
 /// insert, so re-registering refreshes the display strings without touching
@@ -74,7 +74,7 @@ mod tests {
         let mut strings = real_strings();
         let mut mgr = AchievementManager::in_memory();
         register_all(&mut mgr, &strings);
-        assert_eq!(mgr.get(FIRST_HOME).unwrap().name, "Pond Pioneer");
+        assert_eq!(mgr.get(FIRST_HOME).unwrap().name, "Coop Pioneer");
 
         mgr.unlock(FIRST_HOME);
         assert!(mgr.is_unlocked(FIRST_HOME));
@@ -82,7 +82,7 @@ mod tests {
         // Switch locale, re-register: names refresh, unlock state survives.
         strings.set_locale("pirate");
         register_all(&mut mgr, &strings);
-        assert_eq!(mgr.get(FIRST_HOME).unwrap().name, "First Safe Harbor");
+        assert_eq!(mgr.get(FIRST_HOME).unwrap().name, "First Safe Nest");
         assert!(mgr.is_unlocked(FIRST_HOME), "re-registering must not reset unlocks");
     }
 
