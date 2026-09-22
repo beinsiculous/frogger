@@ -29,11 +29,11 @@ use std::path::PathBuf;
 /// VERSION-BUMP CHECKLIST — these must all agree (a mismatch 404s every
 /// asset at boot with a "not in vfs" message):
 /// 1. this constant (`/games/<slug>/v<N>/assets`),
-/// 2. `scripts/build_wasm.sh`'s output dir (currently hardcoded `v1`),
+/// 2. `scripts/build_wasm.sh`'s `--version vN` (its output dir `dist/games/<slug>/v<N>/`),
 /// 3. the site's `src/content/games/<slug>.md` `wasm:` path,
 /// 4. the deployed dir `insiculous_web/public/games/<slug>/v<N>/`.
 #[cfg(not(feature = "editor"))]
-const ASSET_BASE: &str = "/games/frogger/v2/assets";
+const ASSET_BASE: &str = "/games/frogger/v3/assets";
 
 /// Where the editor bundle serves its assets from; also its VFS key base.
 ///
@@ -44,7 +44,7 @@ const ASSET_BASE: &str = "/games/frogger/v2/assets";
 /// 3. the site's `src/content/games/<slug>.md` `editor:` path,
 /// 4. the deployed dir `insiculous_web/public/playground/<slug>/v<N>/`.
 #[cfg(feature = "editor")]
-const EDITOR_ASSET_BASE: &str = "/playground/frogger/v2/assets";
+const EDITOR_ASSET_BASE: &str = "/playground/frogger/v3/assets";
 
 /// The editor's preferences slot for this game.
 ///
