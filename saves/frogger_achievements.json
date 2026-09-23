@@ -1,10 +1,16 @@
 {
   "unlocks": {
+    "first_home": {
+      "unlocked_at": 1789493514
+    },
     "speedy": {
       "unlocked_at": 1789493514
     },
-    "first_home": {
-      "unlocked_at": 1789493514
+    "round_clear": {
+      "unlocked_at": 1790050172
+    },
+    "deathless_round": {
+      "unlocked_at": 1790086742
     }
   }
 }
