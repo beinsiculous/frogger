@@ -11,7 +11,7 @@ Run from this directory:
 ```bash
 cargo run                    # play
 cargo run --features editor  # play inside the scene editor
-cargo test                   # 78 headless tests
+cargo test                   # 84 headless tests
 ```
 
 The same build runs in the browser at [beinsiculous.com/playground/frogger/](https://beinsiculous.com/playground/frogger/): the game inside the editor, layout only — the rules are compiled in and nothing you change there persists.

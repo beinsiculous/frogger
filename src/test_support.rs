@@ -2,10 +2,14 @@
 //!
 //! The synced sheets are read back through the engine's own GPU-free load
 //! path, so a test can check the game's tables against the committed art
-//! without a window, a GPU or a `GameContext`.
+//! without a window, a GPU or a `GameContext`. The fixtures also drive the
+//! whole game through the engine's harness: the real frame, with no window.
+
+use std::path::{Path, PathBuf};
 
 use engine_core::assets::sprite_sheet::{prepare_sheet, PreparedSheet};
 use engine_core::prelude::*;
+use engine_core::test_support::GameHarness;
 
 use crate::constants::*;
 use crate::gameplay::rules::{attempt_timer, LANES};
@@ -19,11 +23,16 @@ pub(crate) fn lane(row: u32) -> LaneDef {
         .unwrap_or_else(|| panic!("no lane covers row {row}"))
 }
 
+/// The synced art's directory, anchored to the crate so the working
+/// directory never matters.
+fn asset_base() -> PathBuf {
+    Path::new(env!("CARGO_MANIFEST_DIR")).join("assets")
+}
+
 /// A synced sheet read through the engine's own GPU-free load path — the one
 /// check that ties the game's tables to the committed art.
 pub(crate) fn sidecar(spec: &SheetSpec) -> PreparedSheet {
-    let base = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("assets");
-    prepare_sheet(&base, spec.path)
+    prepare_sheet(&asset_base(), spec.path)
         .unwrap_or_else(|error| panic!("{} does not load: {error}", spec.path))
 }
 
@@ -102,4 +111,34 @@ pub(crate) fn playing_game(mode: GameMode, chaos: ChaosMode) -> FroggerGame {
         })
         .collect();
     game
+}
+
+/// The title screen's world: the game's own config over the synced art, with
+/// no save paths so achievements and scores stay in memory, and one frame run
+/// so `init` has loaded the sheets and spawned what the title shows.
+pub(crate) fn title_harness() -> GameHarness<FroggerGame> {
+    let base = asset_base();
+    let config = crate::game_config(base.to_str().expect("the asset path is UTF-8"));
+    let mut harness = GameHarness::new(FroggerGame::default(), config);
+    harness.step(1.0 / 60.0, &[]);
+    harness
+}
+
+/// Start a match as the menus do: the title item sets the mode, the mode
+/// menu's confirm sets the chaos mode on the game and the context, then
+/// `start_game`.
+pub(crate) fn start_match(harness: &mut GameHarness<FroggerGame>, mode: GameMode, chaos: ChaosMode) {
+    harness.context(|game, ctx| {
+        game.mode = mode;
+        game.chaos_mode = chaos;
+        ctx.chaos_mode = chaos;
+        game.start_game(ctx)
+    });
+}
+
+/// A match just started from the title screen, through the real frame.
+pub(crate) fn harness(mode: GameMode, chaos: ChaosMode) -> GameHarness<FroggerGame> {
+    let mut harness = title_harness();
+    start_match(&mut harness, mode, chaos);
+    harness
 }

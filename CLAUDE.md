@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 cargo run                     # play the game
 cargo run --features editor   # run the game inside the engine's scene editor
 cargo build                   # compile check
-cargo test                    # 78 headless tests (no GPU, no window)
+cargo test                    # 84 headless tests (no GPU, no window)
 cargo test <test_name>        # run a single test
 ```
 
@@ -57,7 +57,7 @@ This is a single-crate game (`insiculous_frogger`) built on the in-house `insicu
 
 **Achievements:** ids are `&'static str` consts in `achievements.rs` (8 total), registered with locale-table names in `register_achievements()`, which the engine calls before the window opens (`cargo run -- --achievements-manifest <path>` exports the list). They unlock from `fill_home`/`award_round_clear` in flow.rs and persist to `saves/frogger_achievements.json` — the **ids and the three save keys are frozen**: players' saves hang off them, so a re-skin never renames them. Tests pin the id↔locale-key contract and the display-section coverage.
 
-**Tests (78):** `gameplay_tests.rs` (32 — torus wrap/straddle cases, every death path, the dive and duty cycles, the measured extents, home-row resolution, hop priority, chaos scaling, lane-table sanity, and what a round's end does to the chickens), `art_tests.rs` (19 — every sheet read back against its synced sidecar: the pose windows, the frame counts, the machine's clip table, the pose writer, the spawn pose and placement), `board.rs` (8 — the four maps, the row map, uv sizes, the belt's frame direction), `spawning.rs` (8 — segment pairs, naming, the nests and the composition anchor, the life-icon row), `achievements.rs` (6 — locale parity, re-register semantics), `hud.rs` (4 — the board origin and every element's place on it), `menu.rs` (1 — chaos label keys). `test_support.rs` holds the shared fixtures. All headless; run `cargo test` before claiming anything done.
+**Tests (84):** `flow_tests.rs` (6 — match flow through the engine's harness: the fifth fill and the beat, input and lanes during it, its one reset, restart and quit inside it, and the co-op partner in the frame it arms and when it ends), `gameplay_tests.rs` (32 — torus wrap/straddle cases, every death path, the dive and duty cycles, the measured extents, home-row resolution, hop priority, chaos scaling, lane-table sanity, and what a round's end does to the chickens), `art_tests.rs` (19 — every sheet read back against its synced sidecar: the pose windows, the frame counts, the machine's clip table, the pose writer, the spawn pose and placement), `board.rs` (8 — the four maps, the row map, uv sizes, the belt's frame direction), `spawning.rs` (8 — segment pairs, naming, the nests and the composition anchor, the life-icon row), `achievements.rs` (6 — locale parity, re-register semantics), `hud.rs` (4 — the board origin and every element's place on it), `menu.rs` (1 — chaos label keys). `test_support.rs` holds the shared fixtures: the sheets read back through the engine's GPU-free load path, and the whole game driven through the engine's `GameHarness`. All headless; run `cargo test` before claiming anything done.
 
 **Paths:** assets and saves resolve through `engine_core::game_root!()` (exe dir if it contains `assets/`, else `CARGO_MANIFEST_DIR`), so `cargo run` works from any cwd. Input bindings persist to `saves/input_settings.json`.
 

@@ -14,6 +14,8 @@ mod board;
 mod constants;
 mod drawing;
 mod effects;
+#[cfg(test)]
+mod flow_tests;
 mod gameplay;
 mod hud;
 #[cfg(test)]
