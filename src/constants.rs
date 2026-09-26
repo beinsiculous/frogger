@@ -287,3 +287,60 @@ pub(crate) const GRID_IMPULSE_HOME: (f32, f32) = (300.0, 110.0);
 // --- Soup splash (the particle a drowning or a sweeping leaves under its poof) ---
 /// The soup's sauce red, so a splash reads as the river rather than as water.
 pub(crate) const SPLASH_COLOR: Vec4 = Vec4::new(0.72, 0.19, 0.12, 1.0);
+
+// --- the startup cards and the window icon ---------------------------------------
+// Synced from deion_assets like every sheet (`assets/sprites/sync.list`).
+
+/// The cards every Insiculous game opens on, in order: the studio's, then the
+/// engine's. The engine shows them before `init` (`GameConfig::with_startup_splashes`).
+pub(crate) const STARTUP_CARDS: [&str; 2] = [
+    "sprites/ai_be_insiculous_320x192.png",
+    "sprites/ai_insiculous_2d_maxwell_splash_320x192.png",
+];
+/// The engine's icon: the window's until the game draws one of its own.
+pub(crate) const WINDOW_ICON: &str = "sprites/ai_insiculous_2d_maxwell_icon_64x64.png";
+
+// --- the title art --------------------------------------------------------------
+
+/// Chicken Coop's title composition, 480×288, synced from deion_assets.
+pub(crate) const TITLE_ART: &str = "sprites/ai_chicken_coop_title_480x288.png";
+/// The art's last row with content in it: the menu panel starts just under it,
+/// over the art's blank lower margin (measured from the synced PNG).
+pub(crate) const TITLE_ART_CONTENT_BOTTOM: f32 = 220.0;
+/// The title menu panel's width.
+pub(crate) const TITLE_PANEL_WIDTH: f32 = 400.0;
+/// How far below the title panel the lines drawn under it reach: the controls line
+/// at +24 and the tagline at +48, whose glyphs run about 16 px lower still.
+pub(crate) const TITLE_LINES_BELOW_PANEL: f32 = 64.0;
+
+#[cfg(test)]
+mod startup_card_tests {
+    use super::*;
+    use engine_core::{AssetConfig, AssetManager};
+
+    #[test]
+    fn the_startup_cards_are_the_studio_then_the_engine_on_their_contract_backdrops() {
+        let assets_directory = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("assets");
+        let config = crate::game_config(assets_directory.to_str().expect("the asset path is UTF-8"));
+        assert_eq!(config.startup_splashes, STARTUP_CARDS, "the studio's card, then the engine's");
+        assert_eq!(config.window_icon.as_deref(), Some(WINDOW_ICON));
+
+        // The corners are BRANDING.md's named fills, which the engine letterboxes each
+        // card in; a redrawn backdrop that drifts from the contract fails here. The title
+        // art's size is pinned too: its content bottom is measured on that canvas.
+        let assets = AssetManager::headless(AssetConfig::from(&config));
+        for (path, size, corner) in [
+            (STARTUP_CARDS[0], (320, 192), Some([0x14, 0x10, 0x1F, 0xFF])),
+            (STARTUP_CARDS[1], (320, 192), Some([0x4A, 0x44, 0x58, 0xFF])),
+            (WINDOW_ICON, (64, 64), None),
+            (TITLE_ART, (480, 288), Some([0x14, 0x10, 0x1F, 0xFF])),
+        ] {
+            let image = assets.image_backdrop(path).unwrap_or_else(|| panic!("{path} is synced"));
+            assert_eq!((image.size.x, image.size.y), size, "{path}");
+            if let Some(corner) = corner {
+                assert_eq!(image.corner.to_rgba8(), corner, "{path}");
+            }
+        }
+    }
+}
+

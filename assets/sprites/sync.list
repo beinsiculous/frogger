@@ -10,7 +10,7 @@
 # check_no_ai_assets.sh gate must still find them until Jesse's cleanup pass
 # turns them into hand-cleaned masters under deion_assets/topdown/.
 #
-# deion_assets 578903483b75b3724f80e6dd5a9462b3ce69dd9e
+# deion_assets bd4ff3f0b742b155e154a4f71f4837bd51164909
 ai/topdown/chicken_round/ai_chicken_round.png
 ai/topdown/chicken_tall/ai_chicken_tall.png
 ai/topdown/props/sushi_cart/ai_sushi_cart_64x48.png
@@ -28,3 +28,7 @@ ai/topdown/tiles/conveyor_belt/ai_conveyor_belt_48x48.png
 ai/topdown/tiles/tomato_soup/ai_tomato_soup_48x48.png
 ai/topdown/tiles/coop_floor/ai_coop_floor_48x48.png
 ai/topdown/tiles/coop_wall/ai_coop_wall_48x48.png
+ai/branding/be_insiculous/ai_be_insiculous_320x192.png
+ai/branding/insiculous_2d_maxwell/ai_insiculous_2d_maxwell_splash_320x192.png
+ai/branding/insiculous_2d_maxwell/ai_insiculous_2d_maxwell_icon_64x64.png
+ai/title_screens/chicken_coop/ai_chicken_coop_title_480x288.png

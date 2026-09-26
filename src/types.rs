@@ -471,6 +471,9 @@ pub struct FroggerGame {
 
     /// Shared pause menu; only Playing is pausable (see the pause gate).
     pub(crate) pause: PauseMenu,
+    /// The title screen's art, loaded in `init`; `None` when it did not load, and the
+    /// title keeps its plain centred menu.
+    pub(crate) title_art: Option<crate::title_art::TitleArt>,
 }
 
 impl Default for FroggerGame {
@@ -499,6 +502,7 @@ impl Default for FroggerGame {
             fills_this_round: [0; 2],
             total_homes: 0,
             pause: PauseMenu::new(),
+            title_art: None,
         }
     }
 }

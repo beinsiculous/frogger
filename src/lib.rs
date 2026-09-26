@@ -12,6 +12,7 @@ mod achievements;
 mod art_tests;
 mod board;
 mod constants;
+mod title_art;
 mod drawing;
 mod effects;
 #[cfg(test)]
@@ -53,6 +54,8 @@ pub fn game_config(asset_base: &str) -> GameConfig {
         // The art is 1x with nearest filtering, so snapping every sprite's
         // origin to a whole device pixel is what keeps it crisp.
         .with_pixel_snap(true)
+        .with_startup_splashes(STARTUP_CARDS)
+        .with_window_icon(WINDOW_ICON)
         .with_asset_base_path(asset_base)
 }
 
@@ -82,6 +85,7 @@ impl Game for FroggerGame {
 
         let tex = ctx.assets.create_solid_color(1, 1, [255, 255, 255, 255]).unwrap();
         self.sheets.white = tex.id;
+        self.title_art = title_art::TitleArt::load(ctx.assets);
 
         // Every sheet's path, cell and measured bounds is in `constants.rs`'s
         // sheets block; each PNG and its `.sheet.ron` sidecar is a synced copy

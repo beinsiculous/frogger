@@ -5,12 +5,10 @@
 use engine_core::prelude::*;
 use crate::types::*;
 
-/// Panel layouts shared by the input half (mouse hit-testing here) and the
-/// drawing half (`drawing.rs`) — the geometry must match or clicks land
-/// beside the drawn rows. Titles only affect the label, never the layout.
-pub(crate) fn title_panel(title: &str, window_size: Vec2) -> MenuPanel {
-    MenuPanel::new(title, window_size / 2.0, 400.0, TITLE_ITEMS.len())
-}
+// Panel layouts shared by the input half (mouse hit-testing here) and the
+// drawing half (`drawing.rs`) — the geometry must match or clicks land
+// beside the drawn rows. Titles only affect the label, never the layout. The
+// title screen's own layout is `title_art::title_layout`, shared the same way.
 pub(crate) fn chaos_panel(title: &str, window_size: Vec2) -> MenuPanel {
     MenuPanel::new(title, window_size / 2.0, 400.0, ChaosMode::ALL.len())
 }
@@ -81,7 +79,9 @@ pub(crate) fn mode_hint_key(mode: ChaosMode) -> &'static str {
 impl FroggerGame {
     pub(crate) fn update_title_input(&mut self, ctx: &mut GameContext, selection: u8) {
         let input = MenuInput::read(ctx.input);
-        let mouse = title_panel("", ctx.window_size).mouse_select(ctx.input);
+        let mouse = crate::title_art::title_layout("", ctx.window_size, self.title_art.as_ref())
+            .panel
+            .mouse_select(ctx.input);
         let selection = mouse.hovered.unwrap_or(selection);
         let mut selection = input.navigate(selection, TITLE_ITEMS.len() as u8);
         if let Some(row) = mouse.clicked {
