@@ -123,13 +123,9 @@ fn declared_clip<'a>(sheet: &'a SpriteSheet, name: &str) -> Option<&'a Animation
 /// The cell a clip's animation is showing `elapsed` seconds in, at the rate
 /// the sidecar declares. `reversed` walks the same cells the other way.
 fn clip_cell(clip: &AnimationClip, elapsed: f32, reversed: bool) -> Option<u32> {
-    let frames = clip.frame_indices.len() as u32;
-    if frames == 0 {
-        return None;
-    }
-    let reached = (elapsed.max(0.0) * clip.fps) as u32 % frames;
-    let position = if reversed { frames - 1 - reached } else { reached };
-    clip.frame_indices.get(position as usize).copied()
+    let reached = clip.position_at(elapsed)?;
+    let position = if reversed { clip.frame_indices.len() - 1 - reached } else { reached };
+    clip.frame_indices.get(position).copied()
 }
 
 /// Rewrite one row's tiles, and only when the value actually changed — a
