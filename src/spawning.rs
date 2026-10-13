@@ -413,10 +413,7 @@ pub(crate) fn spawn_oneshot(
         .with(Transform2D::from_parts(position, 0.0, spec.scale()))
         .with(sprite)
         .with(animation)
-        .with(ClipStateMachine::new(
-            clip,
-            vec![(clip.to_string(), ClipState::new(clip, OnFinished::Despawn))],
-        ))
+        .with(ClipStateMachine::one_shot(clip))
         .id()
 }
 

@@ -384,40 +384,27 @@ impl Sheets {
     }
 }
 
-/// A sheet with no texture, one cell and no clips. `Sheets::default` holds
-/// these until `init()` loads the real ones: the engine builds the game with
-/// `Default` and calls `init` on the first frame, before any entity that could
-/// draw exists.
-fn placeholder_sheet() -> SpriteSheet {
-    SpriteSheet {
-        texture: TextureHandle { id: 0 },
-        grid: SheetGrid::new(1, 1),
-        clips: Vec::new(),
-        path: String::new(),
-    }
-}
-
 impl Default for Sheets {
     fn default() -> Self {
         Self {
             white: 0,
-            chicken_round: placeholder_sheet(),
-            chicken_tall: placeholder_sheet(),
-            sushi_cart: placeholder_sheet(),
-            donut_cart: placeholder_sheet(),
-            hot_dog_cart: placeholder_sheet(),
-            celery_raft: placeholder_sheet(),
-            baguette_raft: placeholder_sheet(),
-            cracker: placeholder_sheet(),
-            bun: placeholder_sheet(),
-            nest: placeholder_sheet(),
-            arrival_burst: placeholder_sheet(),
-            feather_poof: placeholder_sheet(),
-            life_icon: placeholder_sheet(),
-            conveyor_belt: placeholder_sheet(),
-            tomato_soup: placeholder_sheet(),
-            coop_floor: placeholder_sheet(),
-            coop_wall: placeholder_sheet(),
+            chicken_round: SpriteSheet::placeholder(),
+            chicken_tall: SpriteSheet::placeholder(),
+            sushi_cart: SpriteSheet::placeholder(),
+            donut_cart: SpriteSheet::placeholder(),
+            hot_dog_cart: SpriteSheet::placeholder(),
+            celery_raft: SpriteSheet::placeholder(),
+            baguette_raft: SpriteSheet::placeholder(),
+            cracker: SpriteSheet::placeholder(),
+            bun: SpriteSheet::placeholder(),
+            nest: SpriteSheet::placeholder(),
+            arrival_burst: SpriteSheet::placeholder(),
+            feather_poof: SpriteSheet::placeholder(),
+            life_icon: SpriteSheet::placeholder(),
+            conveyor_belt: SpriteSheet::placeholder(),
+            tomato_soup: SpriteSheet::placeholder(),
+            coop_floor: SpriteSheet::placeholder(),
+            coop_wall: SpriteSheet::placeholder(),
         }
     }
 }
