@@ -9,7 +9,6 @@ use engine_core::prelude::*;
 use crate::achievements::DISPLAY_SECTIONS;
 use crate::gameplay::rules::attempt_timer;
 use crate::hud;
-use crate::title_art::{draw_title_art, title_layout};
 use crate::menu::{
     achievements_panel, chaos_label_key, chaos_panel, mode_hint_key, TitleItem, TITLE_ITEMS,
 };
@@ -53,7 +52,7 @@ impl FroggerGame {
         let controls = strings.tr("title.controls").to_string();
         let tagline = strings.tr("title.tagline").to_string();
 
-        let layout = title_layout(&title, ctx.window_size, self.title_art.as_ref());
+        let layout = title_layout(&title, ctx.window_size, self.title_art.as_ref(), &crate::constants::TITLE_MENU);
         draw_title_art(ctx.ui, ctx.window_size, &layout, self.title_art.as_ref());
         let panel = layout.panel;
         let mut y = panel.begin(ctx.ui, &style);

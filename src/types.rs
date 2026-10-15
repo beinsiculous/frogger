@@ -460,7 +460,7 @@ pub struct FroggerGame {
     pub(crate) pause: PauseMenu,
     /// The title screen's art, loaded in `init`; `None` when it did not load, and the
     /// title keeps its plain centred menu.
-    pub(crate) title_art: Option<crate::title_art::TitleArt>,
+    pub(crate) title_art: Option<TitleArt>,
 }
 
 impl Default for FroggerGame {
