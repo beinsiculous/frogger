@@ -16,7 +16,7 @@ The game depends on the `insiculous_2d` engine by relative path (`../../insiculo
 
 ## Architecture
 
-This is a single-crate game (`insiculous_frogger`) built on the in-house `insiculous_2d` ECS engine — game 6 of the 20 Games Challenge. `FroggerGame` (in `src/types.rs`) implements the engine's `Game` trait in `src/main.rs`: `init()` loads the font and the sheets and spawns the persistent background; achievements register in `register_achievements()`, which the engine calls before the window opens (`cargo run -- --achievements-manifest <path>` exports the list); everything match-scoped spawns fresh in `start_game()`. With `--features editor` the identical game runs inside the engine's scene editor via `editor_integration::run_game_with_editor`, and at `/playground/frogger/` in the browser (the same feature, built by the engine's `build_wasm.sh --kind editor` and served from the site); no game code changes between the modes.
+This is a single-crate game (`insiculous_frogger`) built on the in-house `insiculous_2d` ECS engine — game 6 of the 20 Games Challenge. `FroggerGame` (in `src/types.rs`) implements the engine's `Game` trait in `src/main.rs`: `init()` loads the font and the sheets and spawns the persistent background; achievements register in `register_achievements()`, which the engine calls before the window opens (`cargo run -- --achievements-manifest <path>` exports the list); everything match-scoped spawns fresh in `start_game()`. With `--features editor` the identical game runs inside the engine's scene editor via `editor_integration::run_game_with_editor`, and at `/playground/chicken-coop/` in the browser (the same feature, built by the engine's `build_wasm.sh --kind editor` and served from the site); no game code changes between the modes.
 
 **State machine drives everything.** `GameState` (types.rs) is matched at the top of `update()` in main.rs: `TitleScreen`, `ModeSelect` (chaos select), and `Achievements` dispatch to input handlers in `menu.rs`; `Playing` and `GameOver` fall through to `update_gameplay()` in `gameplay/mod.rs`. Flow is Title → ModeSelect → Playing → GameOver (endless rounds — the only ending is every chicken out of lives). Match lifecycle (start, deaths, nest fills, the round-clear beat, reset-to-title) lives in `gameplay/flow.rs`; the **pure rules** (lane math, platform riding, the dive and duty cycles, hop resolution) live in `gameplay/rules.rs`, and the poses the drawn danger takes live in `gameplay/poses.rs` — data in, data out, no entities, and that's the primary test surface. All UI/HUD drawing is in `drawing.rs`, called once per frame from `update()` regardless of state.
 
@@ -68,8 +68,9 @@ the players are **chickens** crossing a kitchen, the traffic is **food carts on 
 river is **tomato soup** crossed on celery and baguette rafts, the turtles are **sinking crackers**,
 the croc is a **snapping bun** in a breadbox nest, and the home row is five **nest boxes** in a coop
 wall. In-game the game is **Chicken Coop** (`title.window` in both locale files). The crate is still
-`insiculous_frogger`, `FroggerGame` is still the game type, the site still lists it as *Insiculous
-Frogger* and its slug is still `frogger` — those are frozen with the save keys.
+`insiculous_frogger` and `FroggerGame` is still the game type. The site names it **Chicken Coop** at
+`/games/chicken-coop/`, the former `/games/frogger/` redirecting there, and its web save keys are
+`beinsiculous.games.chicken-coop.*`, with the former `beinsiculous.games.frogger.*` keys read at boot.
 
 - **Art enters only through the sync.** `assets/sprites/sync.list` pins the `deion_assets` commit
   and lists the seventeen sources; `python3 deion_assets/scripts/sync_sprites.py .` copies each PNG

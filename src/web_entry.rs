@@ -4,12 +4,12 @@
 //! On wasm the engine's save-path strings are localStorage keys, so the
 //! same save code persists achievements, high scores, and input bindings
 //! in the browser (contract: the engine repo's `docs/WEB_SAVES.md` —
-//! `beinsiculous.games.frogger.*`, values byte-identical to the native
+//! `beinsiculous.games.chicken-coop.*`, values byte-identical to the native
 //! JSON files, `insiculous-save` events fired for the site to observe).
 //!
 //! With `--features editor` the same library builds a SECOND bundle, served at
-//! `/playground/frogger/`, that runs this game inside the engine's scene editor.
-//! That bundle writes none of the `beinsiculous.games.frogger.*` keys above — an
+//! `/playground/chicken-coop/`, that runs this game inside the engine's scene editor.
+//! That bundle writes none of the `beinsiculous.games.chicken-coop.*` keys above — an
 //! editor session must not record achievements, scores or bindings the site's
 //! boards read — and keeps its camera and panel layout in a slot of its own.
 
@@ -33,7 +33,7 @@ use std::path::PathBuf;
 /// 3. the site's `src/content/games/<slug>.md` `wasm:` path,
 /// 4. the deployed dir `insiculous_web/public/games/<slug>/v<N>/`.
 #[cfg(not(feature = "editor"))]
-const ASSET_BASE: &str = "/games/frogger/v4/assets";
+const ASSET_BASE: &str = "/games/chicken-coop/v5/assets";
 
 /// Where the editor bundle serves its assets from; also its VFS key base.
 ///
@@ -79,9 +79,14 @@ pub fn start() {
 #[cfg(not(feature = "editor"))]
 fn run_configured_game() -> Result<(), engine_core::EngineError> {
     let config = crate::game_config(ASSET_BASE)
-        .with_achievement_save_path("beinsiculous.games.frogger.achievements")
-        .with_input_settings_path("beinsiculous.games.frogger.input")
-        .with_score_save_path("beinsiculous.games.frogger.scores");
+        .with_achievement_save_path("beinsiculous.games.chicken-coop.achievements")
+        .with_input_settings_path("beinsiculous.games.chicken-coop.input")
+        .with_score_save_path("beinsiculous.games.chicken-coop.scores")
+        // The keys this game saved under before its rename: read at boot and folded
+        // in, never written, so a player keeps their progress across the rename.
+        .with_former_achievement_save_path("beinsiculous.games.frogger.achievements")
+        .with_former_input_settings_path("beinsiculous.games.frogger.input")
+        .with_former_score_save_path("beinsiculous.games.frogger.scores");
     run_game(crate::FroggerGame::default(), config)
 }
 
