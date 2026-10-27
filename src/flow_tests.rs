@@ -11,10 +11,8 @@ use crate::achievements;
 use crate::board::tile_center;
 use crate::constants::*;
 use crate::gameplay::rules::{lane_velocity, road_hit, wrap_lane_x, wrapped_dx};
-use crate::test_support::{harness, start_match, state_of, title_harness, TOLERANCE};
+use crate::test_support::{arm_beat, fill_nest, harness, start_match, state_of, title_harness, FRAME, TOLERANCE};
 use crate::types::*;
-
-const FRAME: f32 = 1.0 / 60.0;
 
 /// The frames the beat lasts at `FRAME`, from the constant that sets it.
 /// Rounded, not truncated: `FRAME` is the f32 just above a sixtieth, so the
@@ -24,21 +22,6 @@ const BEAT_FRAMES: usize = (ROUND_CLEAR_BEAT / FRAME).round() as usize;
 /// The most frames the beat may take to run out: `BEAT_FRAMES`, with room
 /// for the residue f32 subtraction can leave after them.
 const BEAT_STEP_CAP: usize = 2 * BEAT_FRAMES;
-
-/// Player one fills nest `slot` through the game's own entry point; returns
-/// what the fill paid.
-fn fill_nest(harness: &mut GameHarness<FroggerGame>, slot: usize) -> u32 {
-    let before = harness.game().score;
-    harness.context(|game, ctx| game.fill_home(ctx, 0, slot));
-    harness.game().score - before
-}
-
-/// Fill all five nests, the fifth arming the beat.
-fn arm_beat(harness: &mut GameHarness<FroggerGame>) {
-    for slot in 0..5 {
-        fill_nest(harness, slot);
-    }
-}
 
 /// Step with no input until the beat has run out, or the cap; returns how
 /// many steps ran.

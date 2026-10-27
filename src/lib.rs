@@ -23,6 +23,9 @@ mod hud;
 #[cfg(test)]
 mod gameplay_tests;
 mod menu;
+mod music;
+#[cfg(test)]
+mod music_tests;
 mod spawning;
 #[cfg(test)]
 mod test_support;
@@ -116,9 +119,13 @@ impl Game for FroggerGame {
         // The board, the lanes, the nests and the chickens all spawn fresh in
         // `start_game()` — the chicken count depends on the mode the player
         // picks and the whole board is match-scoped.
+
+        self.music.game.start(ctx);
+        log::info!("chicken coop: init complete");
     }
 
     fn update(&mut self, ctx: &mut GameContext) {
+        self.music.update(ctx);
         match self.state.clone() {
             GameState::TitleScreen { selection } => self.update_title_input(ctx, selection),
             GameState::ModeSelect { selection } => self.update_mode_select_input(ctx, selection),

@@ -8,8 +8,11 @@ use crate::board::tile_center;
 use crate::constants::*;
 use crate::effects;
 use crate::gameplay::rules::{attempt_timer, LANES};
+use crate::music::Moment;
 use crate::spawning;
 use crate::types::*;
+
+use super::ripple_grid;
 
 impl FroggerGame {
     /// State changes on the game-over overlay: Action1 restarts, Menu bails
@@ -76,6 +79,7 @@ impl FroggerGame {
 
         self.apply_theme(ctx.world);
         self.state = GameState::Playing;
+        self.music.game.restart(ctx);
     }
 
     /// A chicken dies: its feather poof, the soup's splash under it when the
@@ -99,7 +103,10 @@ impl FroggerGame {
             POOF_CLIP,
         );
         self.transient_visuals.push(poof);
-        self.ripple_grid(ctx.world, position, GRID_IMPULSE_DEATH);
+        ripple_grid(ctx.world, position, GRID_IMPULSE_DEATH);
+        // Every cause is one squawk on the game's source: the chicken is only hidden, and
+        // its own source would carry the note into its next hop.
+        self.music.play(ctx, Moment::Death);
         self.deaths_this_round += 1;
 
         let chicken = &mut self.chickens[index];
@@ -136,7 +143,7 @@ impl FroggerGame {
             CELEBRATE_CLIP,
         );
         self.transient_visuals.push(burst);
-        self.ripple_grid(ctx.world, tile_center(HOME_COLS[slot], HOME_ROW), GRID_IMPULSE_HOME);
+        ripple_grid(ctx.world, tile_center(HOME_COLS[slot], HOME_ROW), GRID_IMPULSE_HOME);
 
         ctx.achievements.unlock(achievements::FIRST_HOME);
         if secs_left >= SPEEDY_SECS_LEFT {
@@ -153,8 +160,12 @@ impl FroggerGame {
         let timer = attempt_timer(self.chaos_mode);
         self.place_chicken_at_start(ctx, index, timer, Revive::Waiting);
 
+        // The fill that completes the round sounds the cadence alone: a fanfare under it
+        // would be two trumpet chords meaning one thing.
         if self.homes.iter().all(|&home| home) {
             self.award_round_clear(ctx);
+        } else {
+            self.music.play(ctx, Moment::Home);
         }
     }
 
@@ -188,6 +199,7 @@ impl FroggerGame {
         // round's end is what stands it back up.
         self.place_chickens_at_start(ctx, Revive::Never);
         self.round_clear_in = Some(ROUND_CLEAR_BEAT);
+        self.music.play(ctx, Moment::Clear);
     }
 
     /// The beat's end: the round number, the nests, the per-round counters and

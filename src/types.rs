@@ -461,6 +461,8 @@ pub struct FroggerGame {
     /// The title screen's art, loaded in `init`; `None` when it did not load, and the
     /// title keeps its plain centred menu.
     pub(crate) title_art: Option<TitleArt>,
+    /// The song, its moments and its counts, which run for the session.
+    pub(crate) music: crate::music::Music,
 }
 
 impl Default for FroggerGame {
@@ -490,6 +492,7 @@ impl Default for FroggerGame {
             total_homes: 0,
             pause: PauseMenu::new(),
             title_art: None,
+            music: crate::music::Music::default(),
         }
     }
 }

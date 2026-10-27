@@ -14,6 +14,7 @@ use engine_core::prelude::*;
 use crate::board;
 use crate::constants::*;
 use crate::effects;
+use crate::music::Moment;
 use crate::spawning;
 use crate::types::*;
 use poses::*;
@@ -56,9 +57,13 @@ impl FroggerGame {
                 PauseAction::ExitGame => { ctx.request_exit(); return; }
                 // Skip the rest of the frame so the resuming keypress can't
                 // leak into gameplay; the world unfreezes next frame.
-                PauseAction::Resumed => return,
+                PauseAction::Resumed => {
+                    self.music.follow_pause(ctx, false);
+                    return;
+                }
                 PauseAction::Idle => {}
             }
+            self.music.follow_pause(ctx, self.pause.is_active());
             if self.pause.is_active() {
                 return;
             }
@@ -88,6 +93,12 @@ impl FroggerGame {
             }
         }
         self.sync_sprites(ctx);
+        // After the sync, so the ripple sits under the chicken as drawn. A round-clear beat
+        // simulates no chicken, and a frame that retired the last one is already `GameOver`.
+        if self.state == GameState::Playing && self.round_clear_in.is_none() {
+            let chickens = self.active_chicken_positions();
+            self.music.pulse(ctx, &chickens);
+        }
 
         board::animate(ctx.world, &self.board_maps, &self.sheets, self.play_time);
     }
@@ -213,8 +224,10 @@ impl FroggerGame {
         // The hop is instant and the clip plays where the chicken stands: the
         // drawn pose snaps with the rules, so a chicken is never drawn between
         // tiles while the lanes already have it in one.
+        // A clamped hop at the board's edge poses and puffs, so it plays its note too.
         if let Some(entity) = chicken.entity {
             pose_chicken(ctx.world, entity, hop.facing(), true);
+            self.music.play(ctx, Moment::Hop { chicken: entity, index });
         }
 
         let position = self.chicken_pos(index);
@@ -281,6 +294,15 @@ impl FroggerGame {
         if self.chickens.iter().all(|chicken| chicken.retired) && self.state == GameState::Playing {
             self.finish_game(ctx);
         }
+    }
+
+    /// Where each active chicken is: the beat pulse's anchors. A chicken waiting out its
+    /// respawn or retired is hidden, and gets none.
+    fn active_chicken_positions(&self) -> Vec<Vec2> {
+        (0..self.chickens.len())
+            .filter(|&index| self.chickens[index].active())
+            .map(|index| self.chicken_pos(index))
+            .collect()
     }
 
     /// World position of chicken `index` right now.
@@ -373,10 +395,10 @@ impl FroggerGame {
             }
         }
     }
+}
 
-    /// Push a radial shockwave into the board's backdrop grid: the engine
-    /// applies it to every backdrop on its next running frame.
-    pub(crate) fn ripple_grid(&mut self, world: &mut World, position: Vec2, (strength, radius): (f32, f32)) {
-        ripple(world, GridImpulse::Radial { position, strength, radius, attractive: false });
-    }
+/// Push a radial shockwave into the board's backdrop grid: the engine
+/// applies it to every backdrop on its next running frame.
+pub(crate) fn ripple_grid(world: &mut World, position: Vec2, (strength, radius): (f32, f32)) {
+    ripple(world, GridImpulse::Radial { position, strength, radius, attractive: false });
 }

@@ -1,0 +1,116 @@
+(
+    version: 1,
+    soundfont: "soundfonts/chicken_coop.sf2",
+    looping: true,
+    parts: [
+        (
+            name: "galop",
+            track: Name("galop"),
+            mode: Loop,
+            quantize: Off,
+        ),
+        (
+            name: "squawk",
+            track: Name("squawk"),
+            mode: Loop,
+            quantize: Off,
+        ),
+        (
+            name: "fanfare",
+            track: Name("fanfare"),
+            mode: Loop,
+            quantize: Off,
+        ),
+        (
+            name: "clear",
+            track: Name("cadence"),
+            mode: Loop,
+            quantize: Off,
+        ),
+        (
+            name: "jam",
+            track: Name("jam"),
+            mode: Loop,
+            quantize: Off,
+        ),
+    ],
+    instruments: [
+        (
+            name: "trumpet",
+            source: SoundFont(
+                path: "soundfonts/chicken_coop.sf2",
+                bank: 0,
+                preset: 56,
+            ),
+        ),
+        (
+            name: "piccolo",
+            source: SoundFont(
+                path: "soundfonts/chicken_coop.sf2",
+                bank: 0,
+                preset: 72,
+            ),
+        ),
+        (
+            name: "trombone",
+            source: SoundFont(
+                path: "soundfonts/chicken_coop.sf2",
+                bank: 0,
+                preset: 57,
+            ),
+        ),
+        (
+            name: "tuba",
+            source: SoundFont(
+                path: "soundfonts/chicken_coop.sf2",
+                bank: 0,
+                preset: 58,
+            ),
+        ),
+        (
+            name: "timpani",
+            source: SoundFont(
+                path: "soundfonts/chicken_coop.sf2",
+                bank: 0,
+                preset: 47,
+            ),
+        ),
+    ],
+    bindings: [
+        (
+            action: "hop",
+            part: "galop",
+            instrument: "trumpet",
+        ),
+        (
+            action: "hop_two",
+            part: "galop",
+            instrument: "piccolo",
+        ),
+        (
+            action: "death",
+            part: "squawk",
+            instrument: "trombone",
+        ),
+        (
+            action: "home",
+            part: "fanfare",
+            instrument: "trumpet",
+        ),
+        (
+            action: "clear",
+            part: "clear",
+            instrument: "trumpet",
+        ),
+        (
+            action: "menu",
+            part: "jam",
+            instrument: "piccolo",
+        ),
+    ],
+    provenance: Some((
+        author: "Gioachino Rossini, 1829; sequenced by the Opus executor for Be Insiculous, 2026",
+        license: "CC0-1.0",
+    )),
+    midi_fingerprint: Some(6548372533591718852),
+)
