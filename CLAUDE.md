@@ -126,20 +126,22 @@ latch, the beat and the telemetry. Its tests are `src/music_tests.rs`.
 - **The song** is `assets/ai/music/ai_chicken_coop.mid` and its sidecar: forty-eight bars of 2/4 at
   152 BPM in D major (the score's E major a tone down, so the galop's tune sits where the trumpet and
   the piccolo both carry it), about 37.9 s, looping on the opening call's downbeat. An agent
-  sequenced it from memory through the composer's command API (`song new`, `song edit …`, `song save
-  ai/music/ai_chicken_coop.mid`), so it sits under `ai/music` with the `ai_` prefix until a person's
-  pass promotes it; the composer's Save wrote the sidecar and the stanza in `assets/ai/music/LICENSE`.
-  Never hand-edit the sidecar — open the song in the composer (`cargo run --features editor`, File →
-  Open Song) and save it again. The meter is written, not assumed: a song without one is 4/4, and the
-  pulse's bars would land on every other bar line. The loop ends where its last written note ends, so
-  the tuba's last note is held to the bar line.
+  sequenced it from memory through the editor's command API while the editor still composed (`song
+  new`, `song edit …`, `song save ai/music/ai_chicken_coop.mid`); those score verbs are gone, the
+  score is MIDI Evil's now and the engine's `song` verbs map it. It sits under `ai/music` with the
+  `ai_` prefix until a person's pass promotes it; the Conductor panel's Save wrote the sidecar and the
+  stanza in `assets/ai/music/LICENSE`. Never hand-edit the sidecar — open the song in the Conductor
+  panel (`cargo run --features editor`, File → Open Song...) and save it again. The meter is
+  written, not assumed: a song without one is 4/4, and the pulse's bars would land on every other
+  bar line. The loop ends where its last written note ends, so the tuba's last note is held to the
+  bar line.
 - **The background** — the opening call on the trombone (eight bars, `chords`), then the galop's
   oom-pah (the tuba's `bass`, the trombone's `chords`), the timpani's gallop figure (`drums`) and the
   piccolo's second voice in alternate phrases (`counter`) — plays by itself from `init` on, through
   the menus, under the pause menu and under the game-over panel. The galop's tune is not in it: it is
   the `galop` track, walked a hop a note, and a track a part selects plays in no background. `song
-  new` makes a track `melody` on channel 1 with program 0, and the composer changes no track's
-  program; the bank has no preset 0. That track stays empty.
+  new`, a score verb since gone, made a track `melody` on channel 1 with program 0, and no edit
+  changed its program; the bank has no preset 0. That track stays empty.
 - **Six bindings, two source kinds**, every part `Loop` and `quantize: Off` (a quantized trigger in
   the loop's last beat would be parked on the seam and dropped):
 
@@ -172,8 +174,8 @@ latch, the beat and the telemetry. Its tests are `src/music_tests.rs`.
   calls.
 - **A match start decides by the song in the slot** (`GameMusic::restart`, at the end of
   `start_game`, which every match start takes): none → requested again; the game's own → back to its
-  top; another song (the composer's audition in the editor) → left alone. The counts run for the
-  session; a match start never resets them.
+  top; another song (the Conductor panel's audition in the editor) → left alone. The counts run for
+  the session; a match start never resets them.
 - **The pulse**: on each bar line the grid ripples under every active chicken with
   `BEAT_PULSE_STRENGTH` over `BEAT_PULSE_RADIUS` (a nest's ripple), on the bar's other beat
   `BEAT_PULSE_FRACTION` (a quarter; zero is bars only) of it — a bar every 0.79 s. It runs right after
