@@ -163,9 +163,11 @@ Tempo 152 BPM, explicit 2/4, 480 PPQ; integer MIDI tempo 394737 microseconds giv
   The source README gives reproducible commands and tool revisions.
 - Historical editor scores require their original bank and LICENSE restored together
   from Git, separately from the new bank. Do not retarget old scores to this synthesis.
-- Local auditions keep game `/games/chicken-coop/v6/` and editor `/playground/frogger/v5/`.
-  No sync/publication over those deployed immutable versions; publication must follow
-  the four-entry version checklists in src/web_entry.rs.
+- Website release bundles use game `/games/chicken-coop/v7/` and editor
+  `/playground/frogger/v6/`. The matching site content and bundles
+  are prepared in `insiculous_web`; its dev/main merges deploy staging/production.
+  Preserve previous version directories. The four-place checklists in
+  `src/web_entry.rs` must agree for every later release.
 
 ## Work tracking
 
