@@ -1,20 +1,10 @@
-//! Chicken Coop's music: the finale of Gioachino Rossini's *William Tell* overture, which the
-//! engine's conductor plays as a song.
-//!
-//! The background — the opening call, then the galop's oom-pah on the tuba and the trombone,
-//! the timpani's gallop and the piccolo's second voice — plays by itself from `init` on,
-//! through the menus and under the pause menu. Four moments trigger the song's bindings. A hop
-//! walks the galop's tune (the shared `galop` part) on the trumpet for the first chicken and
-//! on the piccolo for the second, on the chicken's own source. A death squawks the trombone, a
-//! nest filled sounds the trumpet's fanfare, and the fifth nest the finale's closing chord
-//! alone, all on the game's source: a chicken is never destroyed in a match, only hidden and
-//! stood back up, so a note on its source would be released by nothing and rung over by its
-//! next hop. A move in the pause menu jams the `jam` line. The backdrop grid ripples under
-//! each active chicken on the song's bars and beats.
-//!
-//! The rules every game's song shares are the engine's `GameMusic` (its `start` and `restart`
-//! are called on `game`); what is here is the game's moments, counts and pulse. A frame sends
-//! chicken 0's hop and what its landing resolves, then chicken 1's, then the respawns.
+//! Crosswalk Carnival: original G-major electro-swing with offbeat bass and chords.
+//! The backing plays independently through menus and pause. The two chickens share
+//! the galop hook on distinct short tuned hop voices and their own sources, including
+//! clamped hop requests. Death uses a low chord; home and clear use bright rewards,
+//! on the game's source. Pause navigation walks the playful jam counter-line.
+//! GameMusic retains restart, pulse and telemetry. The frame still sends chicken 0's
+//! hop and landing outcome, then chicken 1's, then respawns; no input rules change.
 
 use engine_core::prelude::*;
 
@@ -87,7 +77,7 @@ impl Default for Music {
 
 impl Music {
     /// Trigger `moment`'s binding and count it: a hop on its chicken's source, the first
-    /// chicken's on the trumpet and the second's on the piccolo; the rest on the game's.
+    /// chicken's on the harmonic triangle and the second's on the rounded sine; the rest on the game's.
     pub(crate) fn play(&mut self, ctx: &mut GameContext, moment: Moment) {
         let counts = &mut self.counts;
         let (binding, entity, count) = match moment {
@@ -103,7 +93,7 @@ impl Music {
         ctx.sources.trigger(ctx.audio, binding, source);
     }
 
-    /// The pause menu's frame: a move up or down jams one unit of the Ranz des Vaches.
+    /// The pause menu's frame: a move up or down jams one unit of the playful counter-line.
     pub(crate) fn follow_pause(&mut self, ctx: &mut GameContext, paused: bool) {
         if self.game.follow_pause(ctx, paused, MENU_BINDING) {
             #[cfg(test)]
@@ -146,8 +136,8 @@ impl Music {
     }
 }
 
-/// The binding chicken `index`'s hop plays on the shared galop: the round chicken's trumpet,
-/// the tall one's piccolo.
+/// The binding chicken `index`'s hop plays on the shared galop: the round chicken's triangle,
+/// the tall one's harmonic sine.
 fn hop_binding(index: usize) -> &'static str {
     if index == 0 { HOP_BINDING } else { HOP_TWO_BINDING }
 }

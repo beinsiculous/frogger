@@ -1,0 +1,433 @@
+{
+  "version": 1,
+  "name": "Crosswalk Carnival",
+  "copyright": "Original AI synthesis; Be Insiculous; CC0-1.0",
+  "presets": [
+    {
+      "name": "offbeat_bass",
+      "bank": 0,
+      "program": 58,
+      "zones": [
+        {
+          "wav": "rendered/offbeat_bass_43.wav",
+          "keys": [
+            43,
+            43
+          ],
+          "root": 43,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/offbeat_bass_47.wav",
+          "keys": [
+            47,
+            47
+          ],
+          "root": 47,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/offbeat_bass_50.wav",
+          "keys": [
+            50,
+            50
+          ],
+          "root": 50,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/offbeat_bass_52.wav",
+          "keys": [
+            52,
+            52
+          ],
+          "root": 52,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        }
+      ]
+    },
+    {
+      "name": "carnival_lead",
+      "bank": 0,
+      "program": 0,
+      "zones": [
+        {
+          "wav": "rendered/carnival_lead_67.wav",
+          "keys": [
+            67,
+            67
+          ],
+          "root": 67,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/carnival_lead_71.wav",
+          "keys": [
+            71,
+            71
+          ],
+          "root": 71,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/carnival_lead_74.wav",
+          "keys": [
+            74,
+            74
+          ],
+          "root": 74,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/carnival_lead_76.wav",
+          "keys": [
+            76,
+            76
+          ],
+          "root": 76,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/carnival_lead_79.wav",
+          "keys": [
+            79,
+            79
+          ],
+          "root": 79,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/carnival_lead_83.wav",
+          "keys": [
+            83,
+            83
+          ],
+          "root": 83,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/carnival_lead_86.wav",
+          "keys": [
+            86,
+            86
+          ],
+          "root": 86,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/carnival_lead_88.wav",
+          "keys": [
+            88,
+            88
+          ],
+          "root": 88,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        }
+      ]
+    },
+    {
+      "name": "ska_chord",
+      "bank": 0,
+      "program": 1,
+      "zones": [
+        {
+          "wav": "rendered/ska_chord_55.wav",
+          "keys": [
+            55,
+            55
+          ],
+          "root": 55,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/ska_chord_59.wav",
+          "keys": [
+            59,
+            59
+          ],
+          "root": 59,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/ska_chord_62.wav",
+          "keys": [
+            62,
+            62
+          ],
+          "root": 62,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/ska_chord_64.wav",
+          "keys": [
+            64,
+            64
+          ],
+          "root": 64,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        }
+      ]
+    },
+    {
+      "name": "Crosswalk drums",
+      "bank": 128,
+      "program": 0,
+      "zones": [
+        {
+          "wav": "rendered/crosswalk_kick_36.wav",
+          "keys": [
+            36,
+            36
+          ],
+          "root": 36,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/crosswalk_snare_38.wav",
+          "keys": [
+            38,
+            38
+          ],
+          "root": 38,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/swing_hat_42.wav",
+          "keys": [
+            42,
+            42
+          ],
+          "root": 42,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        }
+      ]
+    },
+    {
+      "name": "round_hop",
+      "bank": 0,
+      "program": 56,
+      "zones": [
+        {
+          "wav": "rendered/round_hop_67.wav",
+          "keys": [
+            67,
+            67
+          ],
+          "root": 67,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/round_hop_71.wav",
+          "keys": [
+            71,
+            71
+          ],
+          "root": 71,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/round_hop_74.wav",
+          "keys": [
+            74,
+            74
+          ],
+          "root": 74,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/round_hop_76.wav",
+          "keys": [
+            76,
+            76
+          ],
+          "root": 76,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/round_hop_79.wav",
+          "keys": [
+            79,
+            79
+          ],
+          "root": 79,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/round_hop_83.wav",
+          "keys": [
+            83,
+            83
+          ],
+          "root": 83,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/round_hop_86.wav",
+          "keys": [
+            86,
+            86
+          ],
+          "root": 86,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/round_hop_88.wav",
+          "keys": [
+            88,
+            88
+          ],
+          "root": 88,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        }
+      ]
+    },
+    {
+      "name": "tall_hop",
+      "bank": 0,
+      "program": 72,
+      "zones": [
+        {
+          "wav": "rendered/tall_hop_67.wav",
+          "keys": [
+            67,
+            67
+          ],
+          "root": 67,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/tall_hop_71.wav",
+          "keys": [
+            71,
+            71
+          ],
+          "root": 71,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/tall_hop_74.wav",
+          "keys": [
+            74,
+            74
+          ],
+          "root": 74,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/tall_hop_76.wav",
+          "keys": [
+            76,
+            76
+          ],
+          "root": 76,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/tall_hop_79.wav",
+          "keys": [
+            79,
+            79
+          ],
+          "root": 79,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        }
+      ]
+    },
+    {
+      "name": "coop_crash",
+      "bank": 0,
+      "program": 57,
+      "zones": [
+        {
+          "wav": "rendered/coop_crash_43.wav",
+          "keys": [
+            43,
+            43
+          ],
+          "root": 43,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/coop_crash_50.wav",
+          "keys": [
+            50,
+            50
+          ],
+          "root": 50,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        }
+      ]
+    },
+    {
+      "name": "carnival_tom",
+      "bank": 0,
+      "program": 47,
+      "zones": [
+        {
+          "wav": "rendered/carnival_tom_43.wav",
+          "keys": [
+            43,
+            43
+          ],
+          "root": 43,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/carnival_tom_47.wav",
+          "keys": [
+            47,
+            47
+          ],
+          "root": 47,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        },
+        {
+          "wav": "rendered/carnival_tom_50.wav",
+          "keys": [
+            50,
+            50
+          ],
+          "root": 50,
+          "release_seconds": 0.05,
+          "longest_note_seconds": 0.4
+        }
+      ]
+    }
+  ]
+}

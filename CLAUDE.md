@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 cargo run                     # play the game
 cargo run --features editor   # run the game inside the engine's scene editor
 cargo build                   # compile check
-cargo test                    # 102 headless tests (no GPU, no window)
+cargo test                    # 103 headless tests (no GPU, no window)
 cargo test <test_name>        # run a single test
 ```
 
@@ -57,7 +57,7 @@ This is a single-crate game (`insiculous_frogger`) built on the in-house `insicu
 
 **Achievements:** ids are `&'static str` consts in `achievements.rs` (8 total), registered with locale-table names in `register_achievements()`, which the engine calls before the window opens (`cargo run -- --achievements-manifest <path>` exports the list). They unlock from `fill_home`/`award_round_clear` in flow.rs and persist to `saves/frogger_achievements.json` — the **ids and the three save keys are frozen**: players' saves hang off them, so a re-skin never renames them. Tests pin the id↔locale-key contract and the display-section coverage.
 
-**Tests (102):** `music_tests.rs` (15 — the committed sidecar, bank and score, the four moments and their sources, the order within a frame, the pause jam, the pulse, the match start's identity rule and the missing bank; § Music), `flow_tests.rs` (6 — match flow through the engine's harness: the fifth fill and the beat, input and lanes during it, its one reset, restart and quit inside it, and the co-op partner in the frame it arms and when it ends), `gameplay_tests.rs` (32 — torus wrap/straddle cases, every death path, the dive and duty cycles, the measured extents, home-row resolution, hop priority, chaos scaling, lane-table sanity, and what a round's end does to the chickens), `art_tests.rs` (19 — every sheet read back against its synced sidecar: the pose windows, the frame counts, the machine's clip table, the pose writer, the spawn pose and placement), `board.rs` (8 — the four maps, the row map, uv sizes, the belt's frame direction), `spawning.rs` (8 — segment pairs, naming, the nests and the composition anchor, the life-icon row), `achievements.rs` (6 — locale parity, re-register semantics), `hud.rs` (4 — the board origin and every element's place on it), `menu.rs` (1 — chaos label keys), `title_screen_tests.rs` (2 — the title art and its menu), `constants.rs` (1 — the startup cards). `test_support.rs` holds the shared fixtures: the sheets read back through the engine's GPU-free load path, and the whole game driven through the engine's `GameHarness`. All headless; run `cargo test` before claiming anything done.
+**Tests (103):** `music_tests.rs` (16 — the committed sidecar, bank and score, the four moments and their sources, the order within a frame, the pause jam, the pulse, the match start's identity rule and the missing bank; § Music), `flow_tests.rs` (6 — match flow through the engine's harness: the fifth fill and the beat, input and lanes during it, its one reset, restart and quit inside it, and the co-op partner in the frame it arms and when it ends), `gameplay_tests.rs` (32 — torus wrap/straddle cases, every death path, the dive and duty cycles, the measured extents, home-row resolution, hop priority, chaos scaling, lane-table sanity, and what a round's end does to the chickens), `art_tests.rs` (19 — every sheet read back against its synced sidecar: the pose windows, the frame counts, the machine's clip table, the pose writer, the spawn pose and placement), `board.rs` (8 — the four maps, the row map, uv sizes, the belt's frame direction), `spawning.rs` (8 — segment pairs, naming, the nests and the composition anchor, the life-icon row), `achievements.rs` (6 — locale parity, re-register semantics), `hud.rs` (4 — the board origin and every element's place on it), `menu.rs` (1 — chaos label keys), `title_screen_tests.rs` (2 — the title art and its menu), `constants.rs` (1 — the startup cards). `test_support.rs` holds the shared fixtures: the sheets read back through the engine's GPU-free load path, and the whole game driven through the engine's `GameHarness`. All headless; run `cargo test` before claiming anything done.
 
 **Paths:** assets and saves resolve through `engine_core::game_root!()` (exe dir if it contains `assets/`, else `CARGO_MANIFEST_DIR`), so `cargo run` works from any cwd. Assets in `assets/` (`fonts/`, `locales/`, the synced `sprites/`, the song under `ai/music/` and its bank under `soundfonts/`). Input bindings persist to `saves/input_settings.json`.
 
@@ -115,93 +115,57 @@ wall. In-game the game is **Chicken Coop** (`title.window` in both locale files)
   must. The exit is a hand-cleaned master under `deion_assets/topdown/…`, re-exported without the
   prefix, with the `sync.list` line moved to it.
 
-## Music (the William Tell finale, 2026-10)
+## Music (Crosswalk Carnival, 2026-11)
 
-Chicken Coop plays the finale of Gioachino Rossini's *William Tell* overture through the engine's
-conductor (`training.md` § Conductor Pattern in the engine). The game's part is `src/music.rs` — its
-constants, its moments, its counts and its pulse — standing on the engine's `GameMusic`
-(`engine_core::game_music`), which carries the request, the match start's identity rule, the jam's
-latch, the beat and the telemetry. Its tests are `src/music_tests.rs`.
+Chicken Coop plays the original *Crosswalk Carnival*: bright G-major electro-swing
+with long-short phrasing, offbeat bass/chords and punchy drums. The independent lead
+answers across two-beat bars; A/B/break/reprise and fills develop the 32-bar loop.
+Tempo 152 BPM, explicit 2/4, 480 PPQ; integer MIDI tempo 394737 microseconds gives
+25.263168 seconds and exactly 30720 ticks, ending on a real backing note-off.
 
-- **The song** is `assets/ai/music/ai_chicken_coop.mid` and its sidecar: forty-eight bars of 2/4 at
-  152 BPM in D major (the score's E major a tone down, so the galop's tune sits where the trumpet and
-  the piccolo both carry it), about 37.9 s, looping on the opening call's downbeat. An agent
-  sequenced it from memory through the editor's command API while the editor still composed (`song
-  new`, `song edit …`, `song save ai/music/ai_chicken_coop.mid`); those score verbs are gone, the
-  score is MIDI Evil's now and the engine's `song` verbs map it. It sits under `ai/music` with the
-  `ai_` prefix until a person's pass promotes it; the Conductor panel's Save wrote the sidecar and the
-  stanza in `assets/ai/music/LICENSE`. Never hand-edit the sidecar — open the song in the Conductor
-  panel (`cargo run --features editor`, File → Open Song...) and save it again. The meter is
-  written, not assumed: a song without one is 4/4, and the pulse's bars would land on every other
-  bar line. The loop ends where its last written note ends, so the tuba's last note is held to the
-  bar line.
-- **The background** — the opening call on the trombone (eight bars, `chords`), then the galop's
-  oom-pah (the tuba's `bass`, the trombone's `chords`), the timpani's gallop figure (`drums`) and the
-  piccolo's second voice in alternate phrases (`counter`) — plays by itself from `init` on, through
-  the menus, under the pause menu and under the game-over panel. The galop's tune is not in it: it is
-  the `galop` track, walked a hop a note, and a track a part selects plays in no background. `song
-  new`, a score verb since gone, made a track `melody` on channel 1 with program 0, and no edit
-  changed its program; the bank has no preset 0. That track stays empty.
-- **Six bindings, two source kinds**, every part `Loop` and `quantize: Off` (a quantized trigger in
-  the loop's last beat would be parked on the seam and dropped):
+- Score: `assets/ai/music/ai_chicken_coop.mid`; engine SongDocument owns its sidecar
+  and fingerprint. Editable MIDI Evil project, ten original patches, compose/build
+  recipes and engine auditions are in `music-source/`. Never hand-edit the sidecar.
+- Pitched backing and all asynchronous cues use G/B/D/E; background track names are
+  distinct from the five selectors. Backing plays from init under menus, pause and
+  game over. Every existing action retains Loop/Off and its source:
 
-  | binding | moment | part | instrument | source |
-  |---|---|---|---|---|
-  | `hop` | the first chicken hops (`try_hop`, where the pose is set), a clamped hop at the edge included | `galop` (the tune, G4 to G5) | trumpet | the chicken's own |
-  | `hop_two` | the second chicken hops, co-op only | `galop` | piccolo | the chicken's own |
-  | `death` | a chicken lost, every cause (`kill_chicken`: cart, soup, swept, timeout, a missed nest, the bun) | `squawk` (one low note) | trombone | the game's |
-  | `home` | a nest filled that leaves the round open (`fill_home`) | `fanfare` (one chord, the call's closing fifth) | trumpet | the game's |
-  | `clear` | the fifth nest (`award_round_clear`), alone — no fanfare under it | `clear` on track `cadence` (one chord, the finale's last) | trumpet | the game's |
-  | `menu` | a move in the pause menu | `jam` (the Ranz des Vaches, eight units) | piccolo | the menu's |
+  | action | part/track | original sound (legacy map identifier) | source |
+  | --- | --- | --- | --- |
+  | hop | galop | harmonic triangle (trumpet, 56) | first chicken |
+  | hop_two | galop | rounded harmonic sine (piccolo, 72) | second chicken |
+  | death | squawk | low filtered-saw chord (trombone, 57) | game |
+  | home | fanfare | bright three-note reward (trumpet, 56) | game |
+  | clear | clear / cadence | higher four-note reward (trumpet, 56) | game |
+  | menu | jam | playful harmonic sine (piccolo, 72) | menu |
 
-  Both chickens walk **one** tune: the first on the trumpet, the second on the piccolo, so a co-op
-  crossing is the galop passed between two voices. A cue is one note or one chord: `Loop` plays one
-  unit (the notes starting on one tick) a trigger. In solo either player's keys steer the one
-  chicken, which always plays `hop`. No binding for a cart passing, a raft, the bun snapping, a
-  cracker sinking or the timer's last seconds (no player act is behind them — the timer's end is a
-  `death`), nor for the +10 a new row pays (it is the hop); `advance_round`, a second after the
-  fifth nest, sends nothing.
-- **The chicken that never dies.** A chicken is never destroyed in a match: a death hides it and the
-  respawn stands it back up, so its source lives from its first hop to `clear_match_entities` (a
-  restart or the title), and the next match's first hop activates a new one. That is why every death
-  rings on the game's source: a note on the chicken's would be rung over by its next hop and released
-  by nothing. The lanes' entities live the whole match and carry no binding; a cart's ghost at the
-  seam is a drawn copy, not an entity a sound could sit on. There is no `ctx.sources.end` call.
-- **The order within a frame** is `update_gameplay`'s: `step_chickens` — chicken 0's death on the
-  spot or its hop and then whatever the landing resolves (`["hop", "death"]` into a cart, `["hop",
-  "home"]` into a nest, `["hop", "clear"]` into the fifth), then chicken 1's (`["hop", "hop_two"]`
-  when both hop) — then `step_respawns`. `Music.triggered`, built only in tests, records the frame's
-  calls.
-- **A match start decides by the song in the slot** (`GameMusic::restart`, at the end of
-  `start_game`, which every match start takes): none → requested again; the game's own → back to its
-  top; another song (the Conductor panel's audition in the editor) → left alone. The counts run for
-  the session; a match start never resets them.
-- **The pulse**: on each bar line the grid ripples under every active chicken with
-  `BEAT_PULSE_STRENGTH` over `BEAT_PULSE_RADIUS` (a nest's ripple), on the bar's other beat
-  `BEAT_PULSE_FRACTION` (a quarter; zero is bars only) of it — a bar every 0.79 s. It runs right after
-  `sync_sprites`, so the ripple sits under the chicken as drawn; a hidden chicken (waiting out its
-  respawn, or retired) gets none, and nothing ripples while paused (the frozen grid discards
-  impulses), in `GameOver`, in the round-clear beat, or on the frame the last chicken retires.
-- **The pause menu keeps its localized labels** (`PauseMenu::draw_labeled` from the locale), and its
-  hint says nothing of the jam: a hint that does overflows the engine's 300 px pause panel
-  (insiculous_2d#202), and the text waits on that. No locale key is the music's. Only the pause menu
-  jams.
-- **No recorded fallback.** A song that cannot play is logged once at `error` ("chicken coop: the
-  song could not play: …"), every trigger is refused and counted, and the game is as silent as it was
-  before it had music; each match start asks again.
-- **Telemetry**: every five seconds a `conductor=on …` line with the game's `hops`, `deaths`, `homes`,
-  `clears`, `jam_units`, `pulsed` and `refused`, at `info` when asked — `?telemetry=1` on the web
-  page, `CHICKEN_COOP_TELEMETRY=1` natively. `init` ends with `chicken coop: init complete`, the line
-  the boot measurement stops on.
-- **The bank** is `assets/soundfonts/chicken_coop.sf2`, FluidR3 GM's trumpet (0:56), piccolo (0:72),
-  trombone (0:57), tuba (0:58) and timpani (0:47), 3.29 MiB, cut by `scripts/prepare_soundfont.sh` —
-  a wrapper over the engine's `scripts/prepare_game_soundfont.sh` with `--bank <path>` for a
-  FluidR3_GM.sf2 got any other way; the source's and the output's sha256s are in the `LICENSE` beside
-  it. No horns and no strings fit beside the piccolo and the timpani, so the galop's horn call is the
-  trumpet's. Budget: **the bank under 4 MiB** (the engine's script refuses to write one over it), the
-  song under 256 KiB. On the web every asset, the bank included, is fetched before the first frame.
-- The browser bundles moved to **v6** (game) and **v5** (editor) with the music
-  (`src/web_entry.rs` names the four places each version lives).
+- Declared presets 58 and 47 remain loadable as the new bass and tom backing patches.
+  Their historical tuba/timpani map identifiers are retained; no orchestral samples
+  remain. All five declared slots load, even those without gameplay bindings.
+- Both chickens walk one shared hop cursor. A requested hop still sounds when clamped
+  at an edge. Input and gameplay routing are unchanged: each chicken's hop precedes
+  its landing death/home/clear, then the next chicken runs. The fifth home plays only
+  clear, and later advance_round sends nothing. No additional movement detector.
+- Death hides a chicken and respawn reuses it; its source lasts until match/title
+  teardown. Death/rewards use the game source and ring on. Restart requests a missing
+  song, seeks this game's own song, and leaves an editor audition alone. Counts remain
+  session-wide. Existing teardown and two-player ordering tests enforce this.
+- Bar/beat pulses retain 2/4 timing after sprite sync, under active chickens only.
+  Pause, game over, hidden/retired chickens and the round-clear beat remain silent
+  for grid pulses. Pause navigation keeps the localized labels and jam latch; no
+  new locale key or overflowing hint is introduced.
+- GameMusic still reports missing-song failure/refusal and telemetry (hops, deaths,
+  homes, clears, jam_units, pulsed, refused; ?telemetry=1 or CHICKEN_COOP_TELEMETRY=1).
+  There is no recorded fallback.
+- `assets/soundfonts/ai_chicken_coop.sf2` is original finite exact-key MIDI Evil
+  synthesis, five declared slots, one layer per note, below 4 MiB. prepare_soundfont.sh
+  stages the shared engine builder, with no download or alternate synth fallback.
+  The source README gives reproducible commands and tool revisions.
+- Historical editor scores require their original bank and LICENSE restored together
+  from Git, separately from the new bank. Do not retarget old scores to this synthesis.
+- Local auditions keep game `/games/chicken-coop/v6/` and editor `/playground/frogger/v5/`.
+  No sync/publication over those deployed immutable versions; publication must follow
+  the four-entry version checklists in src/web_entry.rs.
 
 ## Work tracking
 

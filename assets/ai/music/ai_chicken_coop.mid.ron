@@ -1,6 +1,6 @@
 (
     version: 1,
-    soundfont: "soundfonts/chicken_coop.sf2",
+    soundfont: "soundfonts/ai_chicken_coop.sf2",
     looping: true,
     parts: [
         (
@@ -38,7 +38,7 @@
         (
             name: "trumpet",
             source: SoundFont(
-                path: "soundfonts/chicken_coop.sf2",
+                path: "soundfonts/ai_chicken_coop.sf2",
                 bank: 0,
                 preset: 56,
             ),
@@ -46,7 +46,7 @@
         (
             name: "piccolo",
             source: SoundFont(
-                path: "soundfonts/chicken_coop.sf2",
+                path: "soundfonts/ai_chicken_coop.sf2",
                 bank: 0,
                 preset: 72,
             ),
@@ -54,7 +54,7 @@
         (
             name: "trombone",
             source: SoundFont(
-                path: "soundfonts/chicken_coop.sf2",
+                path: "soundfonts/ai_chicken_coop.sf2",
                 bank: 0,
                 preset: 57,
             ),
@@ -62,7 +62,7 @@
         (
             name: "tuba",
             source: SoundFont(
-                path: "soundfonts/chicken_coop.sf2",
+                path: "soundfonts/ai_chicken_coop.sf2",
                 bank: 0,
                 preset: 58,
             ),
@@ -70,7 +70,7 @@
         (
             name: "timpani",
             source: SoundFont(
-                path: "soundfonts/chicken_coop.sf2",
+                path: "soundfonts/ai_chicken_coop.sf2",
                 bank: 0,
                 preset: 47,
             ),
@@ -109,8 +109,8 @@
         ),
     ],
     provenance: Some((
-        author: "Gioachino Rossini, 1829; sequenced by the Opus executor for Be Insiculous, 2026",
+        author: "Original AI composition and MIDI Evil synthesis for Be Insiculous, 2026",
         license: "CC0-1.0",
     )),
-    midi_fingerprint: Some(6548372533591718852),
+    midi_fingerprint: Some(2984134908737966129),
 )
